@@ -76,7 +76,6 @@
 		}
 	},
 	"example":      {},
-	"script":       "file:./dist/scripts/frontend.js",
 	"editorScript": "file:./dist/scripts/editor.js",
 	"style":        "file:./dist/styles/frontend.css",
 	"editorStyle":  "file:./dist/styles/editor.css"
