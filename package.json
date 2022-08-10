@@ -1,0 +1,52 @@
+{
+	"name": "wpzoom-video-popup-block",
+	"version": "1.0.0",
+	"description": "Show a YouTube/Vimeo video in a popup when clicked.",
+	"main": "index.js",
+	"scripts": {
+		"build": "wp-scripts build",
+		"check-engines": "wp-scripts check-engines",
+		"check-licenses": "wp-scripts check-licenses",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"lint:md:docs": "wp-scripts lint-md-docs",
+		"lint:md:js": "wp-scripts lint-md-js",
+		"lint:pkg-json": "wp-scripts lint-pkg-json",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"start": "wp-scripts start",
+		"test:e2e": "wp-scripts test-e2e",
+		"test:unit": "wp-scripts test-unit-js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/wpzoom/wpzoom-video-popup-block.git"
+	},
+	"keywords": [
+		"video",
+		"popup",
+		"block",
+		"gutenberg",
+		"youtube",
+		"vimeo",
+		"WPZOOM",
+		"advanced"
+	],
+	"author": "WPZOOM <hello@wpzoom.com> (https://wpzoom.com)",
+	"license": "GPL-3.0-or-later",
+	"bugs": {
+		"url": "https://github.com/wpzoom/wpzoom-video-popup-block/issues"
+	},
+	"homepage": "https://wpzoom.com/plugins/video-popup-block/",
+	"devDependencies": {
+		"@emotion/styled": "^11.6.0",
+		"@wordpress/scripts": "^22.5.0",
+		"classnames": "^2.3.1",
+		"embed-video": "^2.0.4",
+		"js-video-url-parser": "^0.5.1",
+		"lodash": "^4.17.21",
+		"url": "^0.11.0",
+		"webpack-remove-empty-scripts": "^0.8.0"
+	}
+}

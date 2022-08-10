@@ -1,0 +1,94 @@
+.wpzoom-video-popup-block {
+	font-size: 2rem;
+	box-sizing: border-box;
+	overflow: hidden;
+
+	* {
+		box-sizing: border-box;
+	}
+
+	.wpzoom-video-popup-block_button {
+		display: block;
+		position: relative;
+		font-family: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+		font-style: inherit;
+		letter-spacing: inherit;
+		text-transform: inherit;
+		line-height: inherit;
+		background-color: #000;
+		height: auto;
+		min-height: 300px;
+		padding: 0;
+
+		.wpzoom-video-popup-block_thumbnail {
+			display: block;
+			width: 100%;
+		}
+
+		.wpzoom-video-popup-block_overlay {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 1rem;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			font-family: inherit;
+			font-size: inherit;
+			font-weight: inherit;
+			font-style: inherit;
+			letter-spacing: inherit;
+			text-transform: inherit;
+			line-height: inherit;
+			color: #fff;
+			background: rgba(0, 0, 0, 0.5);
+
+			.wpzoom-video-popup-block_icon {
+				font-size: 2em;
+				font-weight: inherit;
+				font-style: inherit;
+				letter-spacing: inherit;
+				text-transform: inherit;
+				line-height: inherit;
+				color: inherit;
+				height: auto;
+				width: auto;
+				transform: scaleX(-100%);
+
+				&::before {
+					font-size: inherit;
+					font-weight: inherit;
+					font-style: inherit;
+					letter-spacing: inherit;
+					text-transform: inherit;
+					line-height: inherit;
+					color: inherit;
+				}
+			}
+		}
+	}
+
+	.wpzoom-video-popup-block_embed-code {
+		display: none;
+	}
+}
+
+#wpzoom-video-popup-block_embed-code-inner {
+	iframe {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: #000;
+		height: 100%;
+		width: 100%;
+		object-fit: contain;
+		object-position: center;
+	}
+}
