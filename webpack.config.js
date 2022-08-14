@@ -7,8 +7,8 @@ const webpack                  = require( 'webpack' ),
 module.exports = {
 	...defaultConfig,
 
-	entry: glob.sync( './src/**/*.{js,scss}' ).reduce( ( acc, path ) => {
-		const entry  = path.replace( /^\.\/src\//i, '' ).replace( /\.(js|scss)/i, '' );
+	entry: glob.sync( './src/**/*.{js,ts,scss}' ).reduce( ( acc, path ) => {
+		const entry  = path.replace( /^\.\/src\//i, '' ).replace( /\.(js|ts|scss)/i, '' );
 		acc[ entry ] = path;
 		return acc;
 	}, {} ),

@@ -1,94 +1,52 @@
-.wpzoom-video-popup-block {
+@import '~magnific-popup/src/css/main';
+
+a.wpzoom-video-popup-block,
+.editor-styles-wrapper a.wpzoom-video-popup-block {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+	position: relative;
+	font-family: inherit;
 	font-size: 2rem;
+	font-weight: inherit;
+	font-style: inherit;
+	letter-spacing: inherit;
+	text-transform: inherit;
+	text-decoration: none;
+	line-height: inherit;
+	color: #fff;
+	background-color: #000;
+	height: auto;
+	min-height: 300px;
+	padding: 0;
 	box-sizing: border-box;
 	overflow: hidden;
+	cursor: pointer;
 
 	* {
 		box-sizing: border-box;
 	}
 
-	.wpzoom-video-popup-block_button {
+	.wpzoom-video-popup-block_icon {
 		display: block;
-		position: relative;
-		font-family: inherit;
 		font-size: inherit;
 		font-weight: inherit;
 		font-style: inherit;
 		letter-spacing: inherit;
 		text-transform: inherit;
 		line-height: inherit;
-		background-color: #000;
-		height: auto;
-		min-height: 300px;
-		padding: 0;
+		color: inherit;
+		height: 1.5em;
+		width: 1.5em;
+		cursor: pointer;
 
-		.wpzoom-video-popup-block_thumbnail {
+		svg {
 			display: block;
+			color: inherit;
+			height: 100%;
 			width: 100%;
+			cursor: pointer;
 		}
-
-		.wpzoom-video-popup-block_overlay {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			gap: 1rem;
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			font-family: inherit;
-			font-size: inherit;
-			font-weight: inherit;
-			font-style: inherit;
-			letter-spacing: inherit;
-			text-transform: inherit;
-			line-height: inherit;
-			color: #fff;
-			background: rgba(0, 0, 0, 0.5);
-
-			.wpzoom-video-popup-block_icon {
-				font-size: 2em;
-				font-weight: inherit;
-				font-style: inherit;
-				letter-spacing: inherit;
-				text-transform: inherit;
-				line-height: inherit;
-				color: inherit;
-				height: auto;
-				width: auto;
-				transform: scaleX(-100%);
-
-				&::before {
-					font-size: inherit;
-					font-weight: inherit;
-					font-style: inherit;
-					letter-spacing: inherit;
-					text-transform: inherit;
-					line-height: inherit;
-					color: inherit;
-				}
-			}
-		}
-	}
-
-	.wpzoom-video-popup-block_embed-code {
-		display: none;
-	}
-}
-
-#wpzoom-video-popup-block_embed-code-inner {
-	iframe {
-		display: block;
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background: #000;
-		height: 100%;
-		width: 100%;
-		object-fit: contain;
-		object-position: center;
 	}
 }

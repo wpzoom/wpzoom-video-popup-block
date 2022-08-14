@@ -95,8 +95,7 @@ class Plugin {
 		// Do some initial setup on the WordPress `init` hook.
 		add_action( 'init', array( $this, 'init' ) );
 
-		// Add some functions to various hooks.
-		add_action( 'enqueue_block_assets', array( $this, 'enqueue_block_assets' ) );
+		// Add the WPZOOM block category, if needed.
 		add_filter( 'block_categories_all', array( $this, 'block_categories' ), 10, 2 );
 	}
 
@@ -123,18 +122,6 @@ class Plugin {
 			'wpzoom-video-popup-block',
 			$this->plugin_path . 'languages/'
 		);
-	}
-
-	/**
-	 * Enqueues needed assets for the block.
-	 *
-	 * @since  1.0.0
-	 * @return void
-	 */
-	public function enqueue_block_assets() {
-		if ( has_block( $this->block_name ) ) {
-			add_thickbox();
-		}
 	}
 
 	/**
