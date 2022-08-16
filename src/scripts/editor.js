@@ -1,9 +1,11 @@
 'use strict';
 
 import json from '../../block.json';
+import classnames from 'classnames';
 import styled from '@emotion/styled';
 import { registerBlockType } from '@wordpress/blocks';
 import { __ } from '@wordpress/i18n';
+import { useState, useEffect } from '@wordpress/element';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -12,6 +14,7 @@ import {
 import {
 	BaseControl,
 	TextControl,
+	Spinner,
 	Flex,
 	FlexItem,
 	__experimentalUnitControl as UnitControl,
@@ -19,12 +22,14 @@ import {
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon,
 	__experimentalToolsPanel as ToolsPanel,
-	__experimentalToolsPanelItem as ToolsPanelItem
+	__experimentalToolsPanelItem as ToolsPanelItem,
+	__experimentalVStack as VStack
 } from '@wordpress/components';
 import * as playIcons from './icons';
 import urlParser from 'js-video-url-parser/lib/base';
 import 'js-video-url-parser/lib/provider/youtube';
 import 'js-video-url-parser/lib/provider/vimeo';
+import embed from 'embed-video';
 
 const translateAlignments = i => i.replace( 'top', 'start' ).replace( 'left', 'start' ).replace( 'bottom', 'end' ).replace( 'right', 'end' );
 
@@ -56,9 +61,50 @@ registerBlockType(
 		edit: ( props ) => {
 			const { attributes, setAttributes, clientId } = props;
 			const { url, text, position, icon, iconColor, iconSize } = attributes;
+			const [ state, setState ] = useState( { thumbnail: '', loading: false } );
 			const Root = styled.div`box-sizing: border-box; max-width: 235px; padding-bottom: 12px; width: 100%;`;
 			const Header = styled( Flex )`margin-bottom: 8px;`;
 			const HeaderControlWrapper = styled( Flex )`min-height: 30px; gap: 0;`;
+
+			const getVideoThumbnail = ( theUrl ) => {
+				if ( theUrl.length > 0 ) {
+					const urlParsed = urlParser.parse( theUrl );
+
+					if ( typeof urlParsed !== 'undefined' ) {
+						if ( '' !== state.thumbnail || true !== state.loading ) {
+							setState( { thumbnail: '', loading: true } );
+						}
+
+						const thumbSize = 'vimeo' === urlParsed.provider
+							? 'thumbnail_large'
+							: ( 'dailymotion' === urlParsed.provider
+								? 'thumbnail_1080_url'
+								: 'maxresdefault' );
+
+						embed.image( theUrl, { image: thumbSize }, ( err, thumb ) => {
+							if ( err ) {
+								if ( '' !== state.thumbnail || false !== state.loading ) {
+									setState( { thumbnail: '', loading: false } );
+								}
+
+								throw err;
+							} else {
+								if ( thumb.src !== state.thumbnail || false !== state.loading ) {
+									setState( { thumbnail: thumb.src, loading: false } );
+								}
+							}
+						} );
+
+						return;
+					}
+				}
+
+				if ( '' !== state.thumbnail || false !== state.loading ) {
+					setState( { thumbnail: '', loading: false } );
+				}
+			};
+
+			useEffect( () => getVideoThumbnail( url || '' ), [ url ] );
 
 			return (
 				<>
@@ -75,12 +121,25 @@ registerBlockType(
 									isShownByDefault
 									resetAllFilter={ attrs => ( { ...attrs, url: undefined } ) }
 								>
-									<TextControl
-										label={ __( 'Video URL', 'wpzoom-video-popup-block' ) }
-										placeholder={ __( 'e.g. https://youtu.be/GRMSwnJzRDA', 'wpzoom-video-popup-block' ) }
-										value={ url || '' }
-										onChange={ value => setAttributes( { url: value } ) }
-									/>
+									<VStack className="video-url-input">
+										<TextControl
+											label={ __( 'Video URL', 'wpzoom-video-popup-block' ) }
+											placeholder={ __( 'e.g. https://youtu.be/GRMSwnJzRDA', 'wpzoom-video-popup-block' ) }
+											value={ url || '' }
+											onChange={ value => {
+												setAttributes( { url: value } );
+												getVideoThumbnail( value );
+											} }
+										/>
+
+										<div className={ classnames( 'preview-image', { 'show-preview': state.loading || '' !== state.thumbnail } ) }>
+											{ state.loading ?
+												<Spinner />
+											:
+												<img src={ state.thumbnail } />
+											}
+										</div>
+									</VStack>
 								</ToolsPanelItem>
 
 								<ToolsPanelItem
