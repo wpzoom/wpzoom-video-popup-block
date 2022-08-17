@@ -6,6 +6,7 @@
 	"textdomain":   "wpzoom-video-popup-block",
 	"icon":         "video-alt3",
 	"category":     "wpzoom-blocks",
+	"keywords":     [ "video", "popup", "block", "wpzoom", "lightbox", "youtube", "vimeo", "interactive", "click", "customization" ],
 	"attributes":   {
 		"url":             {
 			"type":    "string",
