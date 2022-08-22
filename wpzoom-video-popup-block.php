@@ -9,7 +9,9 @@
  * Text Domain: wpzoom-video-popup-block
  * Domain Path: /languages
  * License: GPLv2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Requires at least: 6.0
+ * Requires PHP:      7.2
  * Tested up to: 6.0.1
  *
  * @package Wpzoom_Video_Popup_Block
