@@ -9,14 +9,18 @@ import { useState, useEffect } from '@wordpress/element';
 import {
 	useBlockProps,
 	InspectorControls,
+	MediaUpload,
+	MediaUploadCheck,
 	__experimentalColorGradientSettingsDropdown as ColorGradientSettingsDropdown
 } from '@wordpress/block-editor';
 import {
 	BaseControl,
 	TextControl,
+	Button,
 	Spinner,
 	Flex,
 	FlexItem,
+	RadioControl,
 	__experimentalUnitControl as UnitControl,
 	__experimentalAlignmentMatrixControl as AlignmentMatrixControl,
 	__experimentalToggleGroupControl as ToggleGroupControl,
@@ -60,15 +64,16 @@ registerBlockType(
 	{
 		edit: ( props ) => {
 			const { attributes, setAttributes, clientId } = props;
-			const { url, text, position, icon, iconColor, iconSize } = attributes;
+			const { source, url, libraryId, text, position, icon, iconColor, iconSize } = attributes;
 			const [ state, setState ] = useState( { thumbnail: '', loading: false } );
 			const Root = styled.div`box-sizing: border-box; max-width: 235px; padding-bottom: 12px; width: 100%;`;
 			const Header = styled( Flex )`margin-bottom: 8px;`;
 			const HeaderControlWrapper = styled( Flex )`min-height: 30px; gap: 0;`;
+			const isPro = document.body.classList.contains( 'wpzoom-video-popup_is-pro' );
 
-			const getVideoThumbnail = ( theUrl ) => {
-				if ( theUrl.length > 0 ) {
-					const urlParsed = urlParser.parse( theUrl );
+			const getVideoThumbnail = value => {
+				if ( value.length > 0 ) {
+					const urlParsed = urlParser.parse( value );
 
 					if ( typeof urlParsed !== 'undefined' ) {
 						if ( '' !== state.thumbnail || true !== state.loading ) {
@@ -81,7 +86,7 @@ registerBlockType(
 								? 'thumbnail_1080_url'
 								: 'maxresdefault' );
 
-						embed.image( theUrl, { image: thumbSize }, ( err, thumb ) => {
+						embed.image( value, { image: thumbSize }, ( err, thumb ) => {
 							if ( err ) {
 								if ( '' !== state.thumbnail || false !== state.loading ) {
 									setState( { thumbnail: '', loading: false } );
@@ -112,17 +117,40 @@ registerBlockType(
 						<div className="wpzoom-video-popup-block-inspector">
 							<ToolsPanel
 								label={ __( 'Content', 'wpzoom-video-popup-block' ) }
-								resetAllFilter={ ( attrs ) => ( { ...attrs, url: undefined, icon: undefined, text: undefined } ) }
+								resetAllFilter={ ( attrs ) => ( { ...attrs, source: undefined, url: undefined, libraryId: undefined, icon: undefined, text: undefined } ) }
 							>
 								<ToolsPanelItem
 									label={ __( 'Video URL', 'wpzoom-video-popup-block' ) }
 									hasValue={ () => !! url }
-									onDeselect={ () => setAttributes( { url: undefined } ) }
+									onDeselect={ () => setAttributes( { source: undefined, url: undefined, libraryId: undefined } ) }
 									isShownByDefault
-									resetAllFilter={ attrs => ( { ...attrs, url: undefined } ) }
+									resetAllFilter={ attrs => ( { ...attrs, source: undefined, url: undefined, libraryId: undefined } ) }
 								>
 									<VStack className="video-url-input">
-										<TextControl
+										{ isPro && <RadioControl
+											label={ __( 'Video Source', 'wpzoom-video-popup-block' ) }
+											selected={ source || 'service' }
+											options={ [
+												{
+													value: 'service',
+													label: __( 'Service (i.e. YouTube, Vimeo, etc.)', 'wpzoom-video-popup-block' )
+												},
+												{
+													value: 'local',
+													label: __( 'Local (i.e. Media Library)', 'wpzoom-video-popup-block' )
+												},
+											] }
+											onChange={ value => {
+												setAttributes( { source: value } );
+												setState( { thumbnail: '', loading: false } );
+
+												if ( 'service' === value ) {
+													getVideoThumbnail( url || '' );
+												}
+											} }
+										/> }
+
+										{ ( ! isPro || ( isPro && 'service' === source ) ) && <TextControl
 											label={ __( 'Video URL', 'wpzoom-video-popup-block' ) }
 											placeholder={ __( 'e.g. https://youtu.be/GRMSwnJzRDA', 'wpzoom-video-popup-block' ) }
 											value={ url || '' }
@@ -130,7 +158,22 @@ registerBlockType(
 												setAttributes( { url: value } );
 												getVideoThumbnail( value );
 											} }
-										/>
+										/> }
+
+										{ ( isPro && 'local' === source ) && <MediaUploadCheck>
+											<MediaUpload
+												onSelect={ media => {
+													setAttributes( { libraryId: media.id } );
+												} }
+												allowedTypes={ [ 'video' ] }
+												value={ libraryId }
+												render={ ( { open } ) => (
+													<div>
+														<Button variant="primary" onClick={ open }>{ __( 'Open Media Library', 'wpzoom-video-popup-block' ) }</Button>
+													</div>
+												) }
+											/>
+										</MediaUploadCheck> }
 
 										<div className={ classnames( 'preview-image', { 'show-preview': state.loading || '' !== state.thumbnail } ) }>
 											{ state.loading ?

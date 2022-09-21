@@ -8,9 +8,17 @@
 	"category":     "wpzoom-blocks",
 	"keywords":     [ "video", "popup", "block", "wpzoom", "lightbox", "youtube", "vimeo", "interactive", "click", "customization" ],
 	"attributes":   {
+		"source":          {
+			"type":    "string",
+			"default": "service"
+		},
 		"url":             {
 			"type":    "string",
 			"default": ""
+		},
+		"libraryId":       {
+			"type":    "integer",
+			"default": -1
 		},
 		"text":            {
 			"type":    "string",

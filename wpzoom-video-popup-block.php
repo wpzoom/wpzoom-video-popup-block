@@ -99,6 +99,10 @@ class Plugin {
 
 		// Add the WPZOOM block category, if needed.
 		add_filter( 'block_categories_all', array( $this, 'block_categories' ), 10, 2 );
+
+		// Add some useful CSS classes.
+		add_filter( 'body_class', array( $this, 'body_class' ) );
+		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
 	}
 
 	/**
@@ -147,5 +151,61 @@ class Plugin {
 		}
 
 		return $categories;
+	}
+
+	/**
+	 * Returns whether the plugin is in "PRO" mode.
+	 *
+	 * @since  1.0.1
+	 * @return bool  Boolean indicating whether the plugin is in "PRO" mode.
+	 */
+	public function is_pro() {
+		return boolval( apply_filters( 'wpzoom_video_popup_block_is_pro', false ) );
+	}
+
+	/**
+	 * Adds some classes for the plugin to the `<body>` tag of the page.
+	 *
+	 * @since  1.0.1
+	 * @param  array $classes Array of existing classes.
+	 * @return array          The modified classes array.
+	 */
+	public function body_class( $classes ) {
+		if ( has_block( 'wpzoom-video-popup-block/block' ) ) {
+			$classes[] = 'wpzoom-video-popup_enabled';
+
+			if ( is_admin() ) {
+				$classes[] = 'wpzoom-video-popup_admin';
+			}
+
+			if ( $this->is_pro() ) {
+				$classes[] = 'wpzoom-video-popup_is-pro';
+			}
+		}
+
+		return $classes;
+	}
+
+	/**
+	 * Adds some classes for the plugin to the `<body>` tag of the WordPress admin.
+	 *
+	 * @since  1.0.1
+	 * @param  string $classes Space-separated string of existing classes.
+	 * @return string          The modified classes string.
+	 */
+	public function admin_body_class( $classes ) {
+		if ( has_block( 'wpzoom-video-popup-block/block' ) ) {
+			$classes .= ' wpzoom-video-popup_enabled ';
+
+			if ( is_admin() ) {
+				$classes .= ' wpzoom-video-popup_admin ';
+			}
+
+			if ( $this->is_pro() ) {
+				$classes .= ' wpzoom-video-popup_is-pro ';
+			}
+		}
+
+		return $classes;
 	}
 }
