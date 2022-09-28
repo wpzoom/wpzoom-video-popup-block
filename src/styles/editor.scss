@@ -4,6 +4,12 @@
 	.video-url-input {
 		margin: 0;
 
+		.video-source-radio {
+			label > div {
+				display: inline;
+			}
+		}
+
 		.preview-image {
 			display: flex;
 			align-items: center;

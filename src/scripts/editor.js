@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import styled from '@emotion/styled';
 import { registerBlockType } from '@wordpress/blocks';
 import { __ } from '@wordpress/i18n';
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, RawHTML } from '@wordpress/element';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -37,8 +37,11 @@ import embed from 'embed-video';
 
 const translateAlignments = i => i.replace( 'top', 'start' ).replace( 'left', 'start' ).replace( 'bottom', 'end' ).replace( 'right', 'end' );
 
+const htmlString = html => RawHTML( { children: html } );
+
 const contentOutput = ( attributes, save = false ) => {
-	const { url, text, position, icon, iconColor, iconSize } = attributes;
+	const { source, url, libraryId, text, position, icon, iconColor, iconSize } = attributes;
+	const libId      = parseInt( libraryId, 10 );
 	const ico        = icon && icon > 0 && icon < 5 ? playIcons[`icon${icon}`] : playIcons.icon1;
 	const iClr       = iconColor ? iconColor : undefined;
 	const iSize      = iconSize ? iconSize : undefined;
@@ -46,7 +49,7 @@ const contentOutput = ( attributes, save = false ) => {
 	const posArgs    = position && typeof position === 'string' && position.trim().length > 0 ? translateAlignments( position ).split( ' ' ) : [];
 	const alignVert  = posArgs.length > 0 ? posArgs[0] : undefined;
 	const alignHorz  = posArgs.length > 1 ? posArgs[1] : undefined;
-	const buttonHref = url && typeof url === 'string' && url.length > 0 && typeof urlParser.parse( url ) !== 'undefined' ? url : undefined;
+	const buttonHref = url && typeof url === 'string' && url.length > 0 && ( ( 'service' === source && typeof urlParser.parse( url ) !== 'undefined' ) || 'local' === source ) ? url : undefined;
 	const blkProps   = { className: 'wpzoom-video-popup-block', href: buttonHref, style: { alignItems: alignVert, justifyContent: alignHorz } };
 	if ( ! save ) blkProps.onClick = e => e.preventDefault();
 	const blockProps = save ? useBlockProps.save( blkProps ) : useBlockProps( blkProps );
@@ -66,6 +69,7 @@ registerBlockType(
 			const { attributes, setAttributes, clientId } = props;
 			const { source, url, libraryId, text, position, icon, iconColor, iconSize } = attributes;
 			const [ state, setState ] = useState( { thumbnail: '', loading: false } );
+			const libId = parseInt( libraryId, 10 );
 			const Root = styled.div`box-sizing: border-box; max-width: 235px; padding-bottom: 12px; width: 100%;`;
 			const Header = styled( Flex )`margin-bottom: 8px;`;
 			const HeaderControlWrapper = styled( Flex )`min-height: 30px; gap: 0;`;
@@ -128,20 +132,21 @@ registerBlockType(
 								>
 									<VStack className="video-url-input">
 										{ isPro && <RadioControl
+											className="video-source-radio"
 											label={ __( 'Video Source', 'wpzoom-video-popup-block' ) }
 											selected={ source || 'service' }
 											options={ [
 												{
 													value: 'service',
-													label: __( 'Service (i.e. YouTube, Vimeo, etc.)', 'wpzoom-video-popup-block' )
+													label: htmlString( __( 'Service <small><em>(i.e. YouTube, Vimeo, etc.)</em></small>', 'wpzoom-video-popup-block' ) )
 												},
 												{
 													value: 'local',
-													label: __( 'Local (i.e. Media Library)', 'wpzoom-video-popup-block' )
+													label: htmlString( __( 'Local <small><em>(i.e. Media Library)</em></small>', 'wpzoom-video-popup-block' ) )
 												},
 											] }
 											onChange={ value => {
-												setAttributes( { source: value } );
+												setAttributes( { source: value, url: undefined, libraryId: undefined } );
 												setState( { thumbnail: '', loading: false } );
 
 												if ( 'service' === value ) {
@@ -163,13 +168,27 @@ registerBlockType(
 										{ ( isPro && 'local' === source ) && <MediaUploadCheck>
 											<MediaUpload
 												onSelect={ media => {
-													setAttributes( { libraryId: media.id } );
+													setAttributes( { url: media.url, libraryId: media.id } );
 												} }
 												allowedTypes={ [ 'video' ] }
 												value={ libraryId }
 												render={ ( { open } ) => (
 													<div>
-														<Button variant="primary" onClick={ open }>{ __( 'Open Media Library', 'wpzoom-video-popup-block' ) }</Button>
+														<Button variant="primary" onClick={ open }>
+															{ libId > 0 ? __( 'Replace', 'wpzoom-video-popup-block' ) : __( 'Select', 'wpzoom-video-popup-block' ) }
+														</Button>
+														&nbsp;
+														{ libId > 0 && (
+															<Button
+																onClick={ () => {
+																	setAttributes( { url: undefined, libraryId: undefined } );
+																} }
+																variant="secondary"
+															>
+																{ __( 'Remove', 'wpzoom-video-popup-block' ) }
+															</Button>
+
+														) }
 													</div>
 												) }
 											/>
