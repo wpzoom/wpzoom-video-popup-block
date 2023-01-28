@@ -3,7 +3,7 @@ Contributors:       wpzoom
 Donate link:        http://paypal.me/wpzm/10usd
 Author URI:         https://www.wpzoom.com/
 Requires at least:  6.0
-Tested up to:       6.0
+Tested up to:       6.1
 Stable tag:         trunk
 Requires PHP:       7.4
 License:            GPLv2 or later
