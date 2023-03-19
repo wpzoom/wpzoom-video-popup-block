@@ -3,7 +3,7 @@ Contributors:       wpzoom
 Donate link:        http://paypal.me/wpzm/10usd
 Author URI:         https://www.wpzoom.com/
 Requires at least:  6.0
-Tested up to:       6.1
+Tested up to:       6.1.1
 Stable tag:         trunk
 Requires PHP:       7.4
 License:            GPLv2 or later
@@ -64,6 +64,9 @@ In the Block editor click on the "+" button to add a new button. Search for "Vid
 
 
 == Changelog ==
+
+= 1.1.0 =
+* Added the ability to use self-hosted videos
 
 = 1.0.0 =
 * Initial plugin release

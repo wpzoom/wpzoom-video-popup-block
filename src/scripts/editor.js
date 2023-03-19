@@ -73,7 +73,6 @@ registerBlockType(
 			const Root = styled.div`box-sizing: border-box; max-width: 235px; padding-bottom: 12px; width: 100%;`;
 			const Header = styled( Flex )`margin-bottom: 8px;`;
 			const HeaderControlWrapper = styled( Flex )`min-height: 30px; gap: 0;`;
-			const isPro = document.body.classList.contains( 'wpzoom-video-popup_is-pro' );
 
 			const getVideoThumbnail = value => {
 				if ( value.length > 0 ) {
@@ -131,7 +130,7 @@ registerBlockType(
 									resetAllFilter={ attrs => ( { ...attrs, source: undefined, url: undefined, libraryId: undefined } ) }
 								>
 									<VStack className="video-url-input">
-										{ isPro && <RadioControl
+										<RadioControl
 											className="video-source-radio"
 											label={ __( 'Video Source', 'wpzoom-video-popup-block' ) }
 											selected={ source || 'service' }
@@ -153,9 +152,9 @@ registerBlockType(
 													getVideoThumbnail( url || '' );
 												}
 											} }
-										/> }
+										/>
 
-										{ ( ! isPro || ( isPro && 'service' === source ) ) && <TextControl
+										{ 'service' === source && <TextControl
 											label={ __( 'Video URL', 'wpzoom-video-popup-block' ) }
 											placeholder={ __( 'e.g. https://youtu.be/GRMSwnJzRDA', 'wpzoom-video-popup-block' ) }
 											value={ url || '' }
@@ -165,7 +164,7 @@ registerBlockType(
 											} }
 										/> }
 
-										{ ( isPro && 'local' === source ) && <MediaUploadCheck>
+										{ 'local' === source && <MediaUploadCheck>
 											<MediaUpload
 												onSelect={ media => {
 													setAttributes( { url: media.url, libraryId: media.id } );
