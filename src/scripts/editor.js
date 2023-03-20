@@ -137,11 +137,11 @@ registerBlockType(
 											options={ [
 												{
 													value: 'service',
-													label: htmlString( __( 'Service <small><em>(i.e. YouTube, Vimeo, etc.)</em></small>', 'wpzoom-video-popup-block' ) )
+													label: htmlString( __( 'External <small><em>(i.e. YouTube, Vimeo, etc.)</em></small>', 'wpzoom-video-popup-block' ) )
 												},
 												{
 													value: 'local',
-													label: htmlString( __( 'Local <small><em>(i.e. Media Library)</em></small>', 'wpzoom-video-popup-block' ) )
+													label: htmlString( __( 'Self-hosted MP4 <small><em>(i.e. Media Library)</em></small>', 'wpzoom-video-popup-block' ) )
 												},
 											] }
 											onChange={ value => {

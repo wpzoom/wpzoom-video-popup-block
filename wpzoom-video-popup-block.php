@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: WPZOOM Video Popup Block
- * Plugin URI: https://www.wpzoom.com/plugins/video-popup-block/
- * Description: Show a YouTube/Vimeo video in a popup when clicked.
+ * Plugin Name: Video Popup Block by WPZOOM
+ * Plugin URI: https://wordpress.org/plugins/wpzoom-video-popup-block/
+ * Description: Quickly add a button displaying a YouTube, Vimeo or Self-Hosted (MP4) video in a popup when clicked.
  * Version: 1.1.0
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
@@ -12,7 +12,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Requires at least: 6.0
  * Requires PHP:      7.2
- * Tested up to: 6.1.1
+ * Tested up to: 6.2
  *
  * @package Wpzoom_Video_Popup_Block
  */
