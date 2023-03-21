@@ -193,11 +193,17 @@ registerBlockType(
 											/>
 										</MediaUploadCheck> }
 
-										<div className={ classnames( 'preview-image', { 'show-preview': state.loading || '' !== state.thumbnail } ) }>
-											{ state.loading ?
-												<Spinner />
+										<div className={ classnames( 'preview-image', { 'show-preview': ( ( 'local' === source && ! _.isEmpty( url ) ) || state.loading || '' !== state.thumbnail ) } ) }>
+											{ 'local' === source && ! _.isEmpty( url ) ?
+												<video muted={ true } preload="auto">
+													<source src={ url } type="video/mp4" />
+												</video>
 											:
-												<img src={ state.thumbnail } />
+												( state.loading ?
+													<Spinner />
+												:
+													<img src={ state.thumbnail } />
+												)
 											}
 										</div>
 									</VStack>
