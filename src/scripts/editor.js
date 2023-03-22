@@ -169,11 +169,12 @@ registerBlockType(
 												onSelect={ media => {
 													setAttributes( { url: media.url, libraryId: media.id } );
 												} }
+												onClose={ () => setState( { loading: false } ) }
 												allowedTypes={ [ 'video' ] }
 												value={ libraryId }
 												render={ ( { open } ) => (
 													<div>
-														<Button variant="primary" onClick={ open }>
+														<Button variant="primary" onClick={ () => { setState( { loading: true } ); open() } }>
 															{ libId > 0 ? __( 'Replace', 'wpzoom-video-popup-block' ) : __( 'Select', 'wpzoom-video-popup-block' ) }
 														</Button>
 														&nbsp;
@@ -181,6 +182,7 @@ registerBlockType(
 															<Button
 																onClick={ () => {
 																	setAttributes( { url: undefined, libraryId: undefined } );
+																	setState( { loading: false } );
 																} }
 																variant="secondary"
 															>
@@ -193,14 +195,14 @@ registerBlockType(
 											/>
 										</MediaUploadCheck> }
 
-										<div className={ classnames( 'preview-image', { 'show-preview': ( ( 'local' === source && ! _.isEmpty( url ) ) || state.loading || '' !== state.thumbnail ) } ) }>
-											{ 'local' === source && ! _.isEmpty( url ) ?
-												<video muted={ true } preload="auto">
-													<source src={ url } type="video/mp4" />
-												</video>
+										<div className={ classnames( 'preview-image', { 'show-preview': ( ( 'local' === source && typeof url !== 'undefined' && '' !== ( '' + url ).trim() ) || state.loading || '' !== state.thumbnail ) } ) }>
+											{ state.loading ?
+												<Spinner />
 											:
-												( state.loading ?
-													<Spinner />
+												( 'local' === source && typeof url !== 'undefined' && '' !== ( '' + url ).trim() ?
+													<video muted={ true } preload="auto">
+														<source src={ url } type="video/mp4" />
+													</video>
 												:
 													<img src={ state.thumbnail } />
 												)
