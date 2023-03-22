@@ -71,6 +71,9 @@ In the Block editor click on the "+" button to add a new button. Search for "Vid
 
 == Changelog ==
 
+= 1.1.1 =
+* Added preview for self-hosted videos
+
 = 1.1.0 =
 * Added the ability to use self-hosted videos
 
