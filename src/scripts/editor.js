@@ -268,7 +268,7 @@ registerBlockType(
 						</div>
 					</InspectorControls>
 
-					<InspectorControls __experimentalGroup="color">
+					<InspectorControls group="color">
 						<ToolsPanelItem
 							label={ __( 'Icon', 'wpzoom-video-popup-block' ) }
 							hasValue={ () => !! iconColor }
@@ -296,7 +296,7 @@ registerBlockType(
 						</ToolsPanelItem>
 					</InspectorControls>
 
-					<InspectorControls __experimentalGroup="dimensions">
+					<InspectorControls group="dimensions">
 						<ToolsPanelItem
 							label={ __( 'Content Position', 'wpzoom-video-popup-block' ) }
 							hasValue={ () => !! position }
