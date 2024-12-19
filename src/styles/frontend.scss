@@ -50,3 +50,9 @@ a.wpzoom-video-popup-block,
 		}
 	}
 }
+
+.mfp-close {
+    svg {
+      pointer-events: none;
+    }
+}
