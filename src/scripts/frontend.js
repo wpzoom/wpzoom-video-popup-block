@@ -7,6 +7,7 @@ import magnificPopup from 'magnific-popup';
 		$( '.wpzoom-video-popup-block[href]' ).each(function() {
 			const $this = $(this);
 			const popupWidth = $this.data('popup-width') || '900px';
+			const isMP4 = $this.attr('href').toLowerCase().endsWith('.mp4');
 
 			$this.magnificPopup( {
 				type: 'iframe',
@@ -15,6 +16,19 @@ import magnificPopup from 'magnific-popup';
 					open: function() {
 						// Set width on mfp-content
 						this.contentContainer.css('max-width', popupWidth);
+					},
+					elementParse: function(item) {
+						// For MP4 videos, we need to create the video element
+						if (isMP4) {
+							const videoUrl = item.src;
+							item.type = 'inline';
+							item.src = $('<div class="mfp-iframe-scaler" style="max-width: ' + popupWidth + ';">' +
+								'<div class="mfp-close"></div>' +
+								'<video class="mfp-iframe" controls autoplay playsinline style="position: absolute; display: block; top: 0; left: 0; width: 100%; height: 100%; background: #000;">' +
+									'<source src="' + videoUrl + '" type="video/mp4">' +
+								'</video>' +
+							'</div>');
+						}
 					}
 				},
 				iframe: {
