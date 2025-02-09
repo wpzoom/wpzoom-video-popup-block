@@ -50,7 +50,39 @@ const contentOutput = ( attributes, save = false ) => {
 	const alignVert  = posArgs.length > 0 ? posArgs[0] : undefined;
 	const alignHorz  = posArgs.length > 1 ? posArgs[1] : undefined;
 	const buttonHref = url && typeof url === 'string' && url.length > 0 && ( ( 'service' === source && typeof urlParser.parse( url ) !== 'undefined' ) || 'local' === source ) ? url : undefined;
-	const blkProps   = { className: 'wpzoom-video-popup-block', href: buttonHref, style: { alignItems: alignVert, justifyContent: alignHorz } };
+	const blkProps   = { 
+		className: 'wpzoom-video-popup-block', 
+		href: buttonHref, 
+		style: { alignItems: alignVert, justifyContent: alignHorz }
+	};
+	if ( ! save ) blkProps.onClick = e => e.preventDefault();
+	const blockProps = save ? useBlockProps.save( blkProps ) : useBlockProps( blkProps );
+
+	return (
+		<a { ...blockProps }>
+			<span className="wpzoom-video-popup-block_icon" style={ iconStyle }>{ ico }</span>
+			{ typeof text !== 'undefined' && text }
+		</a>
+	);
+};
+
+const contentOutputNew = ( attributes, save = false ) => {
+	const { source, url, libraryId, text, position, icon, iconColor, iconSize, popupWidth } = attributes;
+	const libId      = parseInt( libraryId, 10 );
+	const ico        = icon && icon > 0 && icon < 5 ? playIcons[`icon${icon}`] : playIcons.icon1;
+	const iClr       = iconColor ? iconColor : undefined;
+	const iSize      = iconSize ? iconSize : undefined;
+	const iconStyle  = typeof iClr !== 'undefined' || typeof iSize !== 'undefined' ? { color: iClr, height: iSize, width: iSize } : undefined;
+	const posArgs    = position && typeof position === 'string' && position.trim().length > 0 ? translateAlignments( position ).split( ' ' ) : [];
+	const alignVert  = posArgs.length > 0 ? posArgs[0] : undefined;
+	const alignHorz  = posArgs.length > 1 ? posArgs[1] : undefined;
+	const buttonHref = url && typeof url === 'string' && url.length > 0 && ( ( 'service' === source && typeof urlParser.parse( url ) !== 'undefined' ) || 'local' === source ) ? url : undefined;
+	const blkProps   = { 
+		className: 'wpzoom-video-popup-block', 
+		href: buttonHref, 
+		style: { alignItems: alignVert, justifyContent: alignHorz },
+		'data-popup-width': popupWidth
+	};
 	if ( ! save ) blkProps.onClick = e => e.preventDefault();
 	const blockProps = save ? useBlockProps.save( blkProps ) : useBlockProps( blkProps );
 
@@ -67,7 +99,7 @@ registerBlockType(
 	{
 		edit: ( props ) => {
 			const { attributes, setAttributes, clientId } = props;
-			const { source, url, libraryId, text, position, icon, iconColor, iconSize } = attributes;
+			const { source, url, libraryId, text, position, icon, iconColor, iconSize, popupWidth } = attributes;
 			const [ state, setState ] = useState( { thumbnail: '', loading: false } );
 			const libId = parseInt( libraryId, 10 );
 			const Root = styled.div`box-sizing: border-box; max-width: 235px; padding-bottom: 12px; width: 100%;`;
@@ -265,6 +297,29 @@ registerBlockType(
 									/>
 								</ToolsPanelItem>
 							</ToolsPanel>
+
+							<ToolsPanel
+								label={ __( 'Popup Settings', 'wpzoom-video-popup-block' ) }
+								resetAllFilter={ ( attrs ) => ( { ...attrs, popupWidth: '900px' } ) }
+							>
+								<ToolsPanelItem
+									label={ __( 'Popup Width', 'wpzoom-video-popup-block' ) }
+									hasValue={ () => popupWidth !== '900px' }
+									onDeselect={ () => setAttributes( { popupWidth: '900px' } ) }
+									isShownByDefault
+									resetAllFilter={ attrs => ( { ...attrs, popupWidth: '900px' } ) }
+								>
+									<UnitControl
+										label={ __( 'Popup Width', 'wpzoom-video-popup-block' ) }
+										value={ popupWidth }
+										onChange={ value => setAttributes( { popupWidth: value } ) }
+										units={[
+											{ value: 'px', label: 'px', default: 900 },
+											{ value: '%', label: '%', default: 100 }
+										]}
+									/>
+								</ToolsPanelItem>
+							</ToolsPanel>
 						</div>
 					</InspectorControls>
 
@@ -363,6 +418,52 @@ registerBlockType(
 			);
 		},
 
-		save: props => contentOutput( props.attributes, true )
+		save: props => contentOutputNew( props.attributes, true ),
+
+		deprecated: [
+			{
+				attributes: {
+					source: {
+						type: 'string',
+						default: 'service'
+					},
+					url: {
+						type: 'string',
+						default: ''
+					},
+					libraryId: {
+						type: 'integer',
+						default: -1
+					},
+					text: {
+						type: 'string',
+						default: 'Play'
+					},
+					position: {
+						type: 'string',
+						default: ''
+					},
+					icon: {
+						type: 'integer',
+						default: 1
+					},
+					iconColor: {
+						type: 'string',
+						default: ''
+					},
+					iconSize: {
+						type: 'string',
+						default: ''
+					}
+				},
+				save: props => contentOutput( props.attributes, true ),
+				migrate: ( attributes ) => {
+					return {
+						...attributes,
+						popupWidth: '900px'
+					};
+				}
+			}
+		]
 	}
 );

@@ -39,6 +39,10 @@
 		"iconSize":        {
 			"type":    "string",
 			"default": ""
+		},
+		"popupWidth": {
+			"type": "string",
+			"default": "900px"
 		}
 	},
 	"supports":     {
