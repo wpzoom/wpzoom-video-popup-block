@@ -8,9 +8,9 @@ Stable tag:         trunk
 Requires PHP:       7.4
 License:            GPLv2 or later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
-Tags:               block, video, video block, video popup, play button, youtube, vimeo, mp4, self-hosted
+Tags:               video block, video popup, play button, self-hosted, lightbox
 
-Video Popup Block by WPZOOM - a simple yet powerful single-block WordPress plugin designed to enhance your website with engaging video content. This plugin adds a Gutenberg block to your WordPress editor, enabling you to effortlessly create customizable buttons that, when clicked, open a responsive popup containing a YouTube, Vimeo, or Self-Hosted (MP4) video.
+Easily add a Gutenberg block to create customizable Play icon that open popups with YouTube, Vimeo, or MP4 videos
 
 == Description ==
 
