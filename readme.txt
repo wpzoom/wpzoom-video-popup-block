@@ -3,7 +3,7 @@ Contributors:       wpzoom
 Donate link:        http://paypal.me/wpzm/10usd
 Author URI:         https://www.wpzoom.com/
 Requires at least:  6.0
-Tested up to:       6.2
+Tested up to:       6.7
 Stable tag:         trunk
 Requires PHP:       7.4
 License:            GPLv2 or later
@@ -70,6 +70,10 @@ In the Block editor click on the "+" button to add a new button. Search for "Vid
 
 
 == Changelog ==
+
+= 1.1.2 =
+* Added a new option to control the size of the popup
+* Minor bug fixes
 
 = 1.1.1 =
 * Added preview for self-hosted videos

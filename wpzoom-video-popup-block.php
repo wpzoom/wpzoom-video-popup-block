@@ -3,7 +3,7 @@
  * Plugin Name: Video Popup Block by WPZOOM
  * Plugin URI: https://wordpress.org/plugins/wpzoom-video-popup-block/
  * Description: Quickly add a button displaying a YouTube, Vimeo or Self-Hosted (MP4) video in a popup when clicked.
- * Version: 1.1.1
+ * Version: 1.1.2
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: wpzoom-video-popup-block
@@ -11,8 +11,8 @@
  * License: GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Requires at least: 6.0
- * Requires PHP:      7.2
- * Tested up to: 6.2
+ * Requires PHP:      7.4
+ * Tested up to: 6.7
  *
  * @package Wpzoom_Video_Popup_Block
  */
@@ -39,7 +39,7 @@ class Plugin {
 	 * @since 1.0.0
 	 * @var   int
 	 */
-	public const VERSION = '1.1.1';
+	public const VERSION = '1.1.2';
 
 	/**
 	 * Path to the plugin directory.
