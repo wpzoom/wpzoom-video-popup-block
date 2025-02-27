@@ -23,7 +23,7 @@ import magnificPopup from 'magnific-popup';
 							const videoUrl = item.src;
 							item.type = 'inline';
 							item.src = $('<div class="mfp-iframe-scaler" style="max-width: ' + popupWidth + ';">' +
-								'<div class="mfp-close"></div>' +
+								'<div class="mfp-close">&#215;</div>' +
 								'<video class="mfp-iframe" controls autoplay playsinline style="position: absolute; display: block; top: 0; left: 0; width: 100%; height: 100%; background: #000;">' +
 									'<source src="' + videoUrl + '" type="video/mp4">' +
 								'</video>' +
@@ -79,7 +79,7 @@ import magnificPopup from 'magnific-popup';
 						}
 					},
 					markup: '<div class="mfp-iframe-scaler" style="max-width: ' + popupWidth + ';">' +
-							'<div class="mfp-close"></div>' +
+							'<div class="mfp-close">&#215;</div>' +
 							'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>' +
 							'</div>'
 				}

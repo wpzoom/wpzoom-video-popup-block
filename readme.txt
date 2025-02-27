@@ -71,6 +71,9 @@ In the Block editor click on the "+" button to add a new button. Search for "Vid
 
 == Changelog ==
 
+= 1.1.3 =
+* Bug fix with the Close icon not showing
+
 = 1.1.2 =
 * Added a new option to control the size of the popup
 * Minor bug fixes
