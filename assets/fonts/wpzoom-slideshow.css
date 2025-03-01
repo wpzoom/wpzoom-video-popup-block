@@ -1,0 +1,18 @@
+@font-face {
+    font-family: 'WPZoomSlideshowIcons';
+    src: url('wpzoom-slideshow.eot') format('embedded-opentype'),
+        url('wpzoom-slideshow.woff') format('woff'),
+        url('wpzoom-slideshow.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.dashicon.dashicons-wpzoom-slideshow {
+    font-family: 'WPZoomSlideshowIcons';
+    font-style: normal;
+    font-weight: normal;
+}
+
+.dashicon.dashicons-wpzoom-slideshow:before {
+    content: '\e900';
+}

@@ -52,6 +52,7 @@
 		"webpack-remove-empty-scripts": "^1.0.1"
 	},
 	"dependencies": {
-		"magnific-popup": "^1.1.0"
+		"magnific-popup": "^1.1.0",
+		"swiper": "^9.4.1"
 	}
 }

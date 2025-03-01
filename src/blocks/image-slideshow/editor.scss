@@ -1,0 +1,129 @@
+/**
+ * Editor styles for the Image Slideshow block
+ */
+
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+
+// Common mixins
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin upload-area {
+    min-height: 200px;
+    border: 2px dashed #ccc;
+    background-color: #f0f0f0;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: #e0e0e0;
+        border-color: #999;
+    }
+}
+
+.wp-block-wpzoom-image-slideshow {
+    position: relative;
+    margin-bottom: 1em;
+
+    // Editor controls
+    .edit-mode-controls {
+        margin-bottom: 10px;
+        text-align: right;
+    }
+
+    // Upload button styles when no images
+    .image-upload-button {
+        width: 100%;
+        @include flex-center;
+        @include upload-area;
+        cursor: pointer;
+    }
+
+    // Slideshow container styles
+    .slideshow-container {
+        position: relative;
+        width: 100%;
+        height: inherit;
+
+        &.swiper {
+            height: inherit;
+
+            // Swiper theme colors - using common variables
+            --swiper-theme-color: var(--wpzoom-swiper-color) !important;
+            --swiper-navigation-color: var(--wpzoom-swiper-color) !important;
+            --swiper-pagination-color: var(--wpzoom-swiper-color) !important;
+
+            // Base structure
+            .swiper-wrapper,
+            .swiper-slide {
+                width: 100% !important;
+                height: inherit;
+            }
+
+            // Slide content
+            .swiper-slide {
+                @include flex-center;
+                background-color: #000;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+
+            // Navigation elements
+            .swiper-button-next,
+            .swiper-button-prev {
+                color: var(--wpzoom-swiper-color) !important;
+                
+                &:after {
+                    font-size: 24px;
+                }
+            }
+
+            .swiper-pagination {
+                .swiper-pagination-bullet {
+                    background: var(--wpzoom-swiper-color) !important;
+                    opacity: 0.5;
+
+                    &-active {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+
+        // Not in preview mode - show images vertically
+        &:not(.is-preview) {
+            .swiper-slide {
+                margin-bottom: 10px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    // Empty state
+    &:empty {
+        @include flex-center;
+        @include upload-area;
+    }
+
+    // Height inheritance
+    &[style*="height"] {
+        .slideshow-container,
+        .swiper,
+        .swiper-wrapper,
+        .swiper-slide {
+            height: inherit;
+        }
+    }
+} 

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wpzoom/video-cover",
+  "version": "0.1.0",
+  "title": "Video Cover",
+  "category": "wpzoom-blocks",
+  "icon": "cover-image",
+  "description": "Add a video background with support for YouTube and Vimeo.",
+  "supports": {
+    "html": false,
+    "spacing": {
+      "padding": true,
+      "margin": true
+    }
+  },
+  "attributes": {
+    "url": {
+      "type": "string"
+    },
+    "videoProvider": {
+      "type": "string"
+    },
+    "localVideoUrl": {
+      "type": "string"
+    },
+    "localVideoType": {
+      "type": "string"
+    },
+    "backgroundImageId": {
+      "type": "number"
+    },
+    "backgroundImageUrl": {
+      "type": "string"
+    },
+    "backgroundImageAlt": {
+      "type": "string"
+    },
+    "backgroundSize": {
+      "type": "string",
+      "default": "cover"
+    },
+    "dimRatio": {
+      "type": "number",
+      "default": 50
+    },
+    "overlayColor": {
+      "type": "string"
+    },
+    "customOverlayColor": {
+      "type": "string"
+    },
+    "showPauseButton": {
+      "type": "boolean",
+      "default": false
+    },
+    "showUnmuteButton": {
+      "type": "boolean",
+      "default": false
+    },
+    "showFullscreenButton": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "textdomain": "wpzoom-slideshow-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js"
+}

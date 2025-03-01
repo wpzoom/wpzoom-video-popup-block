@@ -1,0 +1,91 @@
+/**
+ * Frontend styles for the Image Slideshow block
+ */
+
+.wp-block-wpzoom-image-slideshow {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+
+    // Alignment styles
+    &.alignwide {
+        max-width: var(--wp--style--global--wide-size);
+        width: 100%;
+    }
+
+    &.alignfull {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    // Slideshow container
+    .slideshow-container {
+        position: relative;
+        width: 100%;
+        height: inherit;
+
+        &.swiper {
+            height: inherit;
+
+            // Swiper theme colors - using common variables
+            --swiper-theme-color: var(--wpzoom-swiper-color) !important;
+            --swiper-navigation-color: var(--wpzoom-swiper-color) !important;
+            --swiper-pagination-color: var(--wpzoom-swiper-color) !important;
+
+            // Base structure
+            .swiper-wrapper,
+            .swiper-slide {
+                width: 100% !important;
+                height: inherit;
+            }
+
+            // Slide content
+            .swiper-slide {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+
+            // Navigation elements
+            .swiper-button-next,
+            .swiper-button-prev {
+                color: var(--wpzoom-swiper-color) !important;
+                
+                &:after {
+                    font-size: 24px;
+                }
+            }
+
+            .swiper-pagination {
+                .swiper-pagination-bullet {
+                    background: var(--wpzoom-swiper-color) !important;
+                    opacity: 0.5;
+
+                    &-active {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+
+    // Height inheritance
+    &[style*="height"] {
+        .slideshow-container,
+        .swiper,
+        .swiper-wrapper,
+        .swiper-slide {
+            height: inherit;
+        }
+    }
+} 

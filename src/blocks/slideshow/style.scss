@@ -1,0 +1,176 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+// Common variables
+:root {
+    --wpzoom-swiper-color: var(--wpzoom-navigation-color, #fff);
+    --wpzoom-slide-height: var(--wpzoom-slideshow-height, 500px);
+}
+
+.wp-block-wpzoom-slideshow {
+    // Alignment styles
+    &.alignwide {
+        max-width: var(--wp--style--global--wide-size);
+        width: 100%;
+    }
+
+    &.alignfull {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    // Container styles
+    .slideshow-container {
+        width: 100%;
+        min-height: inherit;
+
+        &.swiper {
+            min-height: inherit;
+            height: inherit;
+
+            // Swiper theme colors
+            --swiper-theme-color: var(--wpzoom-swiper-color) !important;
+            --swiper-navigation-color: var(--wpzoom-swiper-color) !important;
+            --swiper-pagination-color: var(--wpzoom-swiper-color) !important;
+
+            // Base structure
+            .swiper-wrapper,
+            .swiper-slide {
+                width: 100% !important;
+                min-height: inherit;
+                height: inherit;
+            }
+
+            // Inner blocks height inheritance
+            .swiper-slide {
+                .wp-block-wpzoom-slide,
+                .wp-block-wpzoom-video-cover {
+                    min-height: inherit;
+                    height: inherit;
+                }
+            }
+
+            // Navigation elements
+            .swiper-button-next,
+            .swiper-button-prev {
+                color: var(--wpzoom-swiper-color) !important;
+            }
+
+            .swiper-pagination-bullet {
+                background: var(--wpzoom-swiper-color) !important;
+            }
+        }
+    }
+
+    // Height settings
+    &.is-full-height,
+    &[style*="min-height"] {
+        .slideshow-container,
+        .swiper,
+        .swiper-wrapper,
+        .swiper-slide,
+        .wp-block-wpzoom-slide,
+        .wp-block-wpzoom-video-cover {
+            min-height: inherit;
+            height: inherit;
+        }
+    }
+
+    &.is-full-height {
+        height: 100vh !important;
+        min-height: 100vh !important;
+
+        .slideshow-container,
+        .swiper,
+        .swiper-wrapper,
+        .swiper-slide,
+        .wp-block-wpzoom-slide,
+        .wp-block-wpzoom-video-cover {
+            height: 100vh !important;
+            min-height: 100vh !important;
+        }
+    }
+}
+
+// Video handling
+.wp-block-wpzoom-slide {
+    .wp-block-cover {
+        .wp-block-embed {
+            position: absolute !important;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            
+            iframe {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover;
+            }
+
+            // Provider-specific styles
+            &.is-provider-youtube iframe {
+                width: 300% !important;
+                height: 150% !important;
+            }
+
+            &.is-provider-vimeo iframe {
+                width: 200% !important;
+                height: 200% !important;
+            }
+
+            &:hover {
+                pointer-events: auto;
+            }
+        }
+
+        // Cover block content centering
+        .wp-block-cover__inner-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    }
+}
+
+// Video background wrapper
+.wp-block-cover {
+    .wp-block-cover__video-background-wrapper {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        
+        iframe.wp-block-cover__video-background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            
+            &--youtube {
+                width: 300%;
+                height: 150%;
+            }
+            
+            &--vimeo {
+                width: 200%;
+                height: 200%;
+            }
+        }
+    }
+}

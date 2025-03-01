@@ -4,15 +4,44 @@ const webpack                  = require( 'webpack' ),
       RemoveEmptyScriptsPlugin = require( 'webpack-remove-empty-scripts' ),
       defaultConfig            = require( '@wordpress/scripts/config/webpack.config' );
 
+// Get all block entry points
+const getBlockEntryPoints = () => {
+	const entries = {};
+	
+	// Find all block folders
+	const blockFolders = glob.sync('./src/blocks/*/', { absolute: true });
+	
+	blockFolders.forEach(blockPath => {
+		const blockName = path.basename(blockPath);
+		
+		// Add index entry
+		const indexFile = path.join(blockPath, 'index.js');
+		if (require('fs').existsSync(indexFile)) {
+			entries[`blocks/${blockName}/index`] = indexFile;
+		}
+		
+		// Add view script if it exists
+		const viewFile = path.join(blockPath, 'view.js');
+		if (require('fs').existsSync(viewFile)) {
+			entries[`blocks/${blockName}/view`] = viewFile;
+		}
+		
+		// Add script if it exists
+		const scriptFile = path.join(blockPath, 'script.js');
+		if (require('fs').existsSync(scriptFile)) {
+			entries[`blocks/${blockName}/script`] = scriptFile;
+		}
+	});
+	
+	return entries;
+};
+
 module.exports = {
 	...defaultConfig,
-
-	entry: glob.sync( './src/**/*.{js,ts,scss}' ).reduce( ( acc, path ) => {
-		const entry  = path.replace( /^\.\/src\//i, '' ).replace( /\.(js|ts|scss)/i, '' );
-		acc[ entry ] = path;
-		return acc;
-	}, {} ),
-
+	entry: {
+		...defaultConfig.entry(),
+		'blocks/video-cover/view': path.resolve(process.cwd(), 'src/blocks/video-cover/view.js'),
+	},
 	output: {
 		filename: '[name].js',
 		path:     path.resolve( process.cwd(), 'dist/' ),

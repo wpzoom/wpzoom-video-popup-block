@@ -1,0 +1,76 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+// Import Swiper styles if not already imported
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+@import 'swiper/css/scrollbar';
+
+.wp-block-wpzoom-slideshow {
+	position: relative;
+
+	// Editor-specific styles
+	.toggle-edit-mode {
+		position: absolute;
+		right: 5px;
+		top: -42px;
+		z-index: 9;
+	}
+
+	.append-slide-button {
+		margin-top: 15px;
+	}
+
+	// Preview mode styles
+	.slideshow-container {
+		&.swiper {
+			.swiper-wrapper,
+			.swiper-slide {
+				min-height: inherit;
+			}
+
+			.wp-block-wpzoom-slide {
+				height: 100%;
+				min-height: inherit;
+			}
+
+			// Add these styles for navigation color in editor
+			.swiper-button-next,
+			.swiper-button-prev {
+				color: var(--wpzoom-navigation-color, #fff) !important;
+			}
+
+			.swiper-pagination-bullet {
+				background: var(--wpzoom-navigation-color, #fff) !important;
+			}
+
+			.swiper-pagination-bullet-active {
+				background: var(--wpzoom-navigation-color, #fff) !important;
+			}
+		}
+	}
+
+	// Normal mode styles
+	&:not(.is-preview-mode) {
+		.wp-block-wpzoom-slide {
+			margin-bottom: 20px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+}
+
+// Swiper navigation styles
+.swiper-button-prev,
+.swiper-button-next {
+	&:after {
+		font-size: 24px;
+		color: var(--wpzoom-navigation-color, #fff) !important;
+	}
+}

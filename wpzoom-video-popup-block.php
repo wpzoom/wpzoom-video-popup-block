@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Video Popup Block by WPZOOM
+ * Plugin Name: WPZOOM Inspiro Blocks
  * Plugin URI: https://wordpress.org/plugins/wpzoom-video-popup-block/
  * Description: Quickly add a button displaying a YouTube, Vimeo or Self-Hosted (MP4) video in a popup when clicked.
  * Version: 1.1.3
@@ -17,7 +17,7 @@
  * @package Wpzoom_Video_Popup_Block
  */
 
-namespace WPZOOM\Video_Popup_Block;
+namespace WPZOOM\Inspiro_Blocks;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -99,6 +99,8 @@ class Plugin {
 
 		// Add the WPZOOM block category, if needed.
 		add_filter( 'block_categories_all', array( $this, 'block_categories' ), 10, 2 );
+		add_action( 'enqueue_block_assets', array( $this, 'enqueue_swiper_assets' ) );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_editor_assets' ) );
 
 		// Add some useful CSS classes.
 		add_filter( 'body_class', array( $this, 'body_class' ) );
@@ -119,8 +121,23 @@ class Plugin {
 			$this->plugin_dirname . 'languages/'
 		);
 
-		// Register the main block in Gutenberg.
-		register_block_type( $this->plugin_path . 'block.json' );
+        // Register all blocks
+        $blocks = [
+            'video-popup',
+            'slideshow',
+            'slide',
+            'video-cover',
+            'image-slideshow'
+        ];
+
+        foreach ($blocks as $block) {
+            $block_dir = $this->plugin_path . 'dist/blocks/' . $block;
+            
+            // Check if block.json exists
+            if ( file_exists( $block_dir . '/block.json' ) ) {
+                register_block_type($block_dir);
+            }
+        }
 
 		// Setup translations for the main block.
 		wp_set_script_translations(
@@ -128,6 +145,79 @@ class Plugin {
 			'wpzoom-video-popup-block',
 			$this->plugin_path . 'languages/'
 		);
+
+        // Localize script with plugin data
+        wp_localize_script(
+            'wpzoom-video-popup-block-block-editor-script-js',
+            'wpzoomInspiroBlocksData',
+            array(
+                'pluginUrl' => plugin_dir_url(__FILE__),
+            )
+        );
+
+        // Enqueue dashicons on frontend if video cover block is present
+        if ( ! is_admin() && has_block('wpzoom/video-cover') ) {
+            wp_enqueue_style('dashicons');
+        }
+	}
+
+    /**
+	 * Enqueues the Swiper assets if the block is on the page.
+	 *
+	 * @since  1.1.2
+	 * @return void
+	 */
+	function enqueue_swiper_assets() {
+		// Register Swiper styles and scripts.
+        wp_register_style(
+            'wpzoom-swiper-css',
+            plugins_url( 'assets/css/swiper-bundle.min.css', __FILE__ ),
+            array(),
+            '11.1.14'
+        );
+    
+        wp_register_script(
+            'wpzoom-swiper-js',
+            plugins_url( 'assets/js/swiper-bundle.min.js', __FILE__ ),
+            array(),
+            '11.1.14',
+            true
+        );
+    
+        // Conditionally enqueue them if either block is on the page
+        if ( has_block( 'wpzoom/slideshow' ) || has_block( 'wpzoom/image-slideshow' ) ) {
+            wp_enqueue_style( 'wpzoom-swiper-css' );
+            wp_enqueue_script( 'wpzoom-swiper-js' );
+        }
+	}
+
+	function enqueue_editor_assets() {
+		wp_localize_script( 
+            'wpzoom-slideshow-editor-script', 
+            'wpzoomSlideshowData', 
+            array(
+                'isPro' => $this->is_pro(),
+                'pluginUrl' => $this->plugin_url,
+		    ) 
+        );
+	}
+
+    /**
+	 * Enqueues the icons font for the admin.
+	 * 
+	 * @since  1.1.3
+	 * @return void
+	 */
+	public function enqueue_icons_font() {
+		// Register Swiper styles and scripts.
+		wp_register_style(
+			'wpzoom-slideshow-block-icons-font',
+			plugins_url( 'assets/fonts/wpzoom-slideshow.css', __FILE__ ),
+			array(),
+			'1.0.0'
+		);
+		
+		wp_enqueue_style( 'wpzoom-slideshow-block-icons-font' );
 	}
 
 	/**
@@ -171,7 +261,8 @@ class Plugin {
 	 * @return array          The modified classes array.
 	 */
 	public function body_class( $classes ) {
-		if ( has_block( 'wpzoom-video-popup-block/block' ) ) {
+		
+        if ( has_block( 'wpzoom-video-popup-block/block' ) ) {
 			$classes[] = 'wpzoom-video-popup_enabled';
 
 			if ( is_admin() ) {
@@ -180,6 +271,18 @@ class Plugin {
 
 			if ( $this->is_pro() ) {
 				$classes[] = 'wpzoom-video-popup_is-pro';
+			}
+		}
+
+        if ( has_block( 'wpzoom-slideshow-block/block' ) ) {
+			$classes[] = 'wpzoom-slideshow_enabled';
+
+			if ( is_admin() ) {
+				$classes[] = 'wpzoom-slideshow_admin';
+			}
+
+			if ( $this->is_pro() ) {
+				$classes[] = 'wpzoom-slideshow_is-pro';
 			}
 		}
 
@@ -203,6 +306,18 @@ class Plugin {
 
 			if ( $this->is_pro() ) {
 				$classes .= ' wpzoom-video-popup_is-pro ';
+			}
+		}
+
+        if ( has_block( 'wpzoom-slideshow-block/block' ) ) {
+			$classes .= ' wpzoom-slideshow_enabled ';
+
+			if ( is_admin() ) {
+				$classes .= ' wpzoom-slideshow_admin ';
+			}
+
+			if ( $this->is_pro() ) {
+				$classes .= ' wpzoom-slideshow_is-pro ';
 			}
 		}
 

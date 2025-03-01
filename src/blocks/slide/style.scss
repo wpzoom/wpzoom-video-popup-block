@@ -1,0 +1,29 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+/**
+ * Frontend styles for the Slide block
+ */
+
+.wp-block-wpzoom-slide {
+    position: relative;
+    width: 100%;
+    height: inherit;
+    min-height: inherit;
+
+    // Ensure inner blocks inherit height
+    > * {
+        height: inherit;
+        min-height: inherit;
+    }
+
+    // Cover block adjustments
+    .wp-block-cover {
+        margin: 0;
+        padding: 0;
+    }
+}

@@ -1,0 +1,71 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "wpzoom/image-slideshow",
+    "version": "0.1.0",
+    "title": "Image Slideshow",
+    "category": "wpzoom-blocks",
+    "icon": "images-alt2",
+    "description": "Create beautiful image slideshows with multiple images.",
+    "supports": {
+        "align": ["wide", "full"],
+        "html": false,
+        "spacing": {
+            "margin": true,
+            "padding": true,
+            "blockGap": true
+        },
+        "anchor": true,
+        "color": {
+            "background": true,
+            "text": false
+        },
+        "typography": false
+    },
+    "attributes": {
+        "uniqueId": {
+            "type": "string"
+        },
+        "images": {
+            "type": "array",
+            "default": []
+        },
+        "useNavigation": {
+            "type": "boolean",
+            "default": true
+        },
+        "usePagination": {
+            "type": "boolean",
+            "default": true
+        },
+        "autoplay": {
+            "type": "boolean",
+            "default": false
+        },
+        "loop": {
+            "type": "boolean",
+            "default": true
+        },
+        "speed": {
+            "type": "number",
+            "default": 400
+        },
+        "effect": {
+            "type": "string",
+            "default": "slide"
+        },
+        "navigationColor": {
+            "type": "string",
+            "default": "#fff"
+        },
+        "height": {
+            "type": "string",
+            "default": "500px"
+        }
+    },
+    "textdomain": "wpzoom-slideshow-block",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./index.css",
+    "style": "file:./style-index.css",
+    "script": "file:./script.js"
+} 

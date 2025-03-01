@@ -1,0 +1,119 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wpzoom/slideshow",
+  "version": "0.1.1",
+  "title": "Slideshow",
+  "category": "wpzoom-blocks",
+  "icon": "wpzoom-slideshow",
+  "description": "Slideshow block with customizable settings.",
+  "supports": {
+    "align": true,
+    "html": false,
+    "spacing": {
+      "padding": true,
+      "margin": true
+    }
+  },
+  "attributes": {
+    "uniqueId": {
+      "type": "string"
+    },
+    "useNavigation": {
+      "type": "boolean",
+      "default": true
+    },
+    "usePagination": {
+      "type": "boolean",
+      "default": true
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": false
+    },
+    "loop": {
+      "type": "boolean",
+      "default": true
+    },
+    "speed": {
+      "type": "number",
+      "default": 400
+    },
+    "spaceBetween": {
+      "type": "number",
+      "default": 0
+    },
+    "slidesPerView": {
+      "type": "number",
+      "default": 1
+    },
+    "effect": {
+      "type": "string",
+      "default": "slide"
+    },
+    "direction": {
+      "type": "string",
+      "default": "horizontal"
+    },
+    "freeMode": {
+      "type": "boolean",
+      "default": false
+    },
+    "centeredSlides": {
+      "type": "boolean",
+      "default": false
+    },
+    "cssMode": {
+      "type": "boolean",
+      "default": false
+    },
+    "gridRows": {
+      "type": "number",
+      "default": 1
+    },
+    "controller": {
+      "type": "boolean",
+      "default": false
+    },
+    "fadeEffect": {
+      "type": "boolean",
+      "default": false
+    },
+    "cubeEffect": {
+      "type": "boolean",
+      "default": false
+    },
+    "flipEffect": {
+      "type": "boolean",
+      "default": false
+    },
+    "coverflowEffect": {
+      "type": "boolean",
+      "default": false
+    },
+    "fullHeight": {
+      "type": "boolean",
+      "default": false
+    },
+    "minHeight": {
+      "type": "string",
+      "default": "500px"
+    },
+    "isFullHeight": {
+      "type": "boolean",
+      "default": false
+    },
+    "align": {
+      "type": "string"
+    },
+    "navigationColor": {
+      "type": "string",
+      "default": "#fff"
+    }
+  },
+  "textdomain": "wpzoom-slideshow-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "script": "file:./script.js"
+}
