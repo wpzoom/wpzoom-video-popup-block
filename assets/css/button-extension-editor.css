@@ -1,0 +1,73 @@
+/**
+ * Styles for the hover color controls in the editor
+ */
+.wpzoom-hover-colors-container {
+    padding: 16px;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 8px;
+}
+
+.wpzoom-hover-colors-container h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.wpzoom-hover-colors-container .components-base-control {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.wpzoom-hover-colors-container .components-base-control__label {
+    margin-bottom: 0;
+    font-size: 13px;
+}
+
+.wpzoom-hover-colors-container input[type="color"] {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.wpzoom-hover-color-control {
+    margin-bottom: 16px !important;
+}
+
+.wpzoom-hover-color-control .components-base-control__label {
+    margin-bottom: 8px;
+    display: block;
+}
+
+/**
+ * Styles for the custom style panel in the editor
+ */
+.wpzoom-custom-style-panel {
+    padding: 8px 0;
+}
+
+.wpzoom-color-control {
+    margin-bottom: 16px !important;
+}
+
+.wpzoom-color-control .components-base-control__label {
+    margin-bottom: 8px;
+    display: block;
+    font-weight: 500;
+}
+
+.wpzoom-divider {
+    margin: 24px 0;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Make sure our panel appears in the right place */
+.components-panel__body + .components-panel__body {
+    border-top: 1px solid #e0e0e0;
+} 

@@ -41,6 +41,8 @@ module.exports = {
 	entry: {
 		...defaultConfig.entry(),
 		'blocks/video-cover/view': path.resolve(process.cwd(), 'src/blocks/video-cover/view.js'),
+		'button-extension': path.resolve(process.cwd(), 'src/button-extension.js'),
+		'button-extension-frontend': path.resolve(process.cwd(), 'src/button-extension-frontend.js')
 	},
 	output: {
 		filename: '[name].js',

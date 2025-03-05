@@ -101,6 +101,13 @@ class Plugin {
 		add_filter( 'block_categories_all', array( $this, 'block_categories' ), 10, 2 );
 		add_action( 'enqueue_block_assets', array( $this, 'enqueue_swiper_assets' ) );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_editor_assets' ) );
+        
+        // Add icons font for admin.
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_icons_font' ) );
+		
+		// Add button extension scripts and styles
+		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_button_extension_editor_assets' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_button_extension_frontend_assets' ) );
 
 		// Add some useful CSS classes.
 		add_filter( 'body_class', array( $this, 'body_class' ) );
@@ -322,5 +329,145 @@ class Plugin {
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * Enqueues the button extension scripts and styles for the editor.
+	 *
+	 * @since  1.1.4
+	 * @return void
+	 */
+	public function enqueue_button_extension_editor_assets() {
+		// Register and enqueue the button extension script
+		wp_register_script(
+			'wpzoom-button-extension',
+			$this->plugin_url . 'dist/button-extension.js',
+			array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-compose', 'wp-hooks', 'wp-data' ),
+			self::VERSION,
+			true
+		);
+		
+		// Register and enqueue the button extension editor CSS
+		wp_register_style(
+			'wpzoom-button-extension-editor-css',
+			$this->plugin_url . 'assets/css/button-extension-editor.css',
+			array(),
+			self::VERSION
+		);
+		
+		wp_enqueue_script( 'wpzoom-button-extension' );
+		wp_enqueue_style( 'wpzoom-button-extension-editor-css' );
+	}
+	
+	/**
+	 * Enqueues the button extension scripts and styles for the frontend.
+	 *
+	 * @since  1.1.4
+	 * @return void
+	 */
+	public function enqueue_button_extension_frontend_assets() {
+		// Register and enqueue the button extension CSS
+		wp_register_style(
+			'wpzoom-button-extension-css',
+			$this->plugin_url . 'assets/css/button-extension.css',
+			array(),
+			self::VERSION
+		);
+		
+		// Register and enqueue the direct CSS for hover effects
+		wp_register_style(
+			'wpzoom-button-extension-direct-css',
+			$this->plugin_url . 'assets/css/button-extension-direct.css',
+			array('wpzoom-button-extension-css'),
+			self::VERSION
+		);
+		
+		// Register and enqueue the button extension frontend script
+		wp_register_script(
+			'wpzoom-button-extension-frontend',
+			$this->plugin_url . 'dist/button-extension-frontend.js',
+			array(),
+			self::VERSION,
+			true
+		);
+		
+		wp_enqueue_style( 'wpzoom-button-extension-css' );
+		wp_enqueue_style( 'wpzoom-button-extension-direct-css' );
+		wp_enqueue_script( 'wpzoom-button-extension-frontend' );
+		
+		// Add dynamic CSS for buttons with hover colors
+		add_action('wp_head', array($this, 'add_button_hover_dynamic_css'));
+	}
+	
+	/**
+	 * Adds dynamic CSS for buttons with hover colors.
+	 * This is needed for custom colors that aren't in our predefined list.
+	 * Note: This is now a fallback method as we primarily use JavaScript for hover effects.
+	 *
+	 * @since  1.1.4
+	 * @return void
+	 */
+	public function add_button_hover_dynamic_css() {
+		// We're now using JavaScript to apply hover effects
+		// This function is kept as a fallback for browsers with JavaScript disabled
+		
+		global $post;
+		if (!is_object($post)) {
+			return;
+		}
+		
+		// Check if the post content has button blocks
+		if (has_block('core/button', $post->post_content)) {
+			// Parse the post content to find button blocks with hover colors
+			$pattern = '/<a[^>]*class="[^"]*wp-block-button__link[^"]*has-hover-colors[^"]*"[^>]*data-hover-background="([^"]*)"[^>]*>/';
+			$pattern2 = '/<a[^>]*class="[^"]*wp-block-button__link[^"]*has-hover-colors[^"]*"[^>]*data-hover-text="([^"]*)"[^>]*>/';
+			
+			// Also try the reverse order of attributes
+			$pattern_alt = '/<a[^>]*data-hover-background="([^"]*)"[^>]*class="[^"]*wp-block-button__link[^"]*has-hover-colors[^"]*"[^>]*>/';
+			$pattern2_alt = '/<a[^>]*data-hover-text="([^"]*)"[^>]*class="[^"]*wp-block-button__link[^"]*has-hover-colors[^"]*"[^>]*>/';
+			
+			$matches = array();
+			$matches2 = array();
+			$matches_alt = array();
+			$matches2_alt = array();
+			
+			preg_match_all($pattern, $post->post_content, $matches);
+			preg_match_all($pattern2, $post->post_content, $matches2);
+			preg_match_all($pattern_alt, $post->post_content, $matches_alt);
+			preg_match_all($pattern2_alt, $post->post_content, $matches2_alt);
+			
+			$hover_bg_colors = array_unique(array_merge($matches[1], $matches_alt[1]));
+			$hover_text_colors = array_unique(array_merge($matches2[1], $matches2_alt[1]));
+			
+			// Only add CSS if we found buttons with hover colors
+			if (!empty($hover_bg_colors) || !empty($hover_text_colors)) {
+				echo '<style>';
+				
+				// Add a general transition for all buttons with hover colors
+				echo '.wp-block-button__link.has-hover-colors {';
+				echo 'transition: all 0.3s ease !important;';
+				echo '}';
+				
+				// Generate CSS for each unique hover background color
+				foreach ($hover_bg_colors as $color) {
+					if (!empty($color)) {
+						echo '.wp-block-button__link.has-hover-colors[data-hover-background="' . esc_attr($color) . '"]:hover {';
+						echo 'background-color: ' . esc_attr($color) . ' !important;';
+						echo '}';
+					}
+				}
+				
+				// Generate CSS for each unique hover text color
+				foreach ($hover_text_colors as $color) {
+					if (!empty($color)) {
+						echo '.wp-block-button__link.has-hover-colors[data-hover-text="' . esc_attr($color) . '"]:hover {';
+						echo 'color: ' . esc_attr($color) . ' !important;';
+						echo '}';
+					}
+				}
+				
+				echo '</style>';
+			}
+		}
 	}
 }
