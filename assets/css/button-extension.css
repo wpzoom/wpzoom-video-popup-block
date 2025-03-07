@@ -1,20 +1,6 @@
 /**
- * Button hover styles for the frontend
- */
-.wp-block-button__link.has-hover-colors {
-    transition: all 0.3s ease !important;
-}
-
-/* 
- * Note: The actual hover colors are now applied via JavaScript
- * This CSS file only provides the transition effect
+ * Button styles for the frontend
+ * Note: All hover effects are now handled by JavaScript
  */
 
-/* Direct CSS for browsers that might not support CSS variables */
-.wp-block-button__link[data-hover-background]:hover {
-    background-color: attr(data-hover-background) !important;
-}
-
-.wp-block-button__link[data-hover-text]:hover {
-    color: attr(data-hover-text) !important;
-} 
+/* No CSS hover styles - everything is handled by JavaScript */ 
