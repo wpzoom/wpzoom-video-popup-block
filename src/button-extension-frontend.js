@@ -31,6 +31,11 @@ document.addEventListener('DOMContentLoaded', function() {
         return colorValue;
     }
     
+    // Helper function to apply styles with !important
+    function applyImportantStyle(element, property, value) {
+        element.style.setProperty(property, value, 'important');
+    }
+    
     // First, let's log all buttons on the page for debugging
     const allButtons = document.querySelectorAll('.wp-block-button');
     console.log('WPZOOM Button Extension: Found ' + allButtons.length + ' total button containers');
@@ -88,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Check if the button already has a transition style
             const currentStyle = button.getAttribute('style') || '';
             if (!currentStyle.includes('transition')) {
-                button.style.transition = 'all 0.3s ease';
+                applyImportantStyle(button, 'transition', 'all 0.3s ease');
             }
             
             // Create a test div to check if the color values are valid
@@ -127,19 +132,19 @@ document.addEventListener('DOMContentLoaded', function() {
             button.onmouseover = function() {
                 console.log(`Button ${index + 1} hover activated`);
                 if (hoverBackground) {
-                    this.style.backgroundColor = hoverBackground;
+                    applyImportantStyle(this, 'background-color', hoverBackground);
                     console.log(`Applied background color: ${hoverBackground}`);
                 }
                 if (hoverText) {
-                    this.style.color = hoverText;
+                    applyImportantStyle(this, 'color', hoverText);
                     console.log(`Applied text color: ${hoverText}`);
                 }
             };
             
             button.onmouseout = function() {
                 console.log(`Button ${index + 1} hover deactivated`);
-                this.style.backgroundColor = originalBgColor;
-                this.style.color = originalTextColor;
+                applyImportantStyle(this, 'background-color', originalBgColor);
+                applyImportantStyle(this, 'color', originalTextColor);
             };
             
             // Also handle focus for accessibility
@@ -148,17 +153,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Add a special class to mark this button as processed
             button.classList.add('wpzoom-hover-processed');
-            
-            // Test the hover effect once
-            console.log(`Testing hover effect on Button ${index + 1}`);
-            setTimeout(function() {
-                button.dispatchEvent(new MouseEvent('mouseover'));
-                
-                setTimeout(function() {
-                    button.dispatchEvent(new MouseEvent('mouseout'));
-                    console.log(`Hover test complete for Button ${index + 1}`);
-                }, 300);
-            }, 500 + (index * 200));
         } else {
             console.log(`Button ${index + 1} has no hover colors defined`);
         }
@@ -221,20 +215,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add transition to the button
                 const currentStyle = button.getAttribute('style') || '';
                 if (!currentStyle.includes('transition')) {
-                    button.style.transition = 'all 0.3s ease';
+                    applyImportantStyle(button, 'transition', 'all 0.3s ease');
                 }
                 
                 // Apply hover effects to the button
                 button.onmouseover = function() {
                     console.log(`Button ${index + 1} hover activated (aggressive method)`);
-                    if (hoverBackground) this.style.backgroundColor = hoverBackground;
-                    if (hoverText) this.style.color = hoverText;
+                    if (hoverBackground) applyImportantStyle(this, 'background-color', hoverBackground);
+                    if (hoverText) applyImportantStyle(this, 'color', hoverText);
                 };
                 
                 button.onmouseout = function() {
                     console.log(`Button ${index + 1} hover deactivated (aggressive method)`);
-                    this.style.backgroundColor = originalBgColor;
-                    this.style.color = originalTextColor;
+                    applyImportantStyle(this, 'background-color', originalBgColor);
+                    applyImportantStyle(this, 'color', originalTextColor);
                 };
                 
                 // Also handle focus for accessibility
