@@ -140,6 +140,7 @@ function addHoverAttributesToSave( extraProps, blockType, attributes ) {
 
     if ( customHoverBackgroundColor || customHoverTextColor ) {
         // Add data attributes to store hover colors
+        // Use a prefix to make it easier to identify and remove our attributes
         if (customHoverBackgroundColor) {
             extraProps['data-hover-background'] = customHoverBackgroundColor;
         }
@@ -148,14 +149,8 @@ function addHoverAttributesToSave( extraProps, blockType, attributes ) {
         }
         
         // Ensure the has-hover-colors class is added
+        // Use a prefix to make it easier to identify and remove our class
         extraProps.className = extraProps.className ? `${extraProps.className} has-hover-colors` : 'has-hover-colors';
-        
-        // Add inline style for transition to ensure smooth effect
-        const existingStyle = extraProps.style || {};
-        extraProps.style = {
-            ...existingStyle,
-            transition: 'all 0.3s ease'
-        };
         
         // Debug the final props
         console.log('WPZOOM Button Extension: Final extraProps', extraProps);

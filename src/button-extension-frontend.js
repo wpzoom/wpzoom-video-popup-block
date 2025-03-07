@@ -72,12 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
             buttonClasses: button.className
         });
         
-        // Ensure the container has the has-hover-colors class
-        if (!container.classList.contains('has-hover-colors')) {
-            console.log(`Adding missing has-hover-colors class to button ${index + 1}`);
-            container.classList.add('has-hover-colors');
-        }
-        
         if (hoverBackground || hoverText) {
             // Store original colors of the button
             const computedStyle = window.getComputedStyle(button);
@@ -88,13 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 backgroundColor: originalBgColor,
                 textColor: originalTextColor
             });
-            
-            // Add transition to the button (not the container)
-            // Check if the button already has a transition style
-            const currentStyle = button.getAttribute('style') || '';
-            if (!currentStyle.includes('transition')) {
-                applyImportantStyle(button, 'transition', 'all 0.3s ease');
-            }
             
             // Create a test div to check if the color values are valid
             const testDiv = document.createElement('div');
@@ -150,9 +137,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Also handle focus for accessibility
             button.onfocus = button.onmouseover;
             button.onblur = button.onmouseout;
-            
-            // Add a special class to mark this button as processed
-            button.classList.add('wpzoom-hover-processed');
         } else {
             console.log(`Button ${index + 1} has no hover colors defined`);
         }
@@ -212,12 +196,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const originalBgColor = computedStyle.backgroundColor;
                 const originalTextColor = computedStyle.color;
                 
-                // Add transition to the button
-                const currentStyle = button.getAttribute('style') || '';
-                if (!currentStyle.includes('transition')) {
-                    applyImportantStyle(button, 'transition', 'all 0.3s ease');
-                }
-                
                 // Apply hover effects to the button
                 button.onmouseover = function() {
                     console.log(`Button ${index + 1} hover activated (aggressive method)`);
@@ -234,9 +212,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Also handle focus for accessibility
                 button.onfocus = button.onmouseover;
                 button.onblur = button.onmouseout;
-                
-                // Add a special class to mark this button as processed
-                button.classList.add('wpzoom-hover-processed');
             }
         });
     }
