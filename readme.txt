@@ -35,7 +35,7 @@ Perfect for Block Themes (FSE - Full Site Editing Themes)!
 
 [**Inspiro Blocks**](https://www.wordpress.org/themes/inspiro-blocks/) - *NEW*
 [**Inspiro Lite**](https://www.wordpress.org/themes/inspiro/)
-[**Inspiro Classic**](https://www.wpzoom.com/themes/inspiro/)
+[**Inspiro Premium**](https://www.wpzoom.com/themes/inspiro/)
 [**Inspiro PRO**](https://www.wpzoom.com/themes/inspiro-pro/) - *NEW*
 
 = Quick Tips =
