@@ -35,6 +35,41 @@ import 'js-video-url-parser/lib/provider/youtube';
 import 'js-video-url-parser/lib/provider/vimeo';
 import embed from 'embed-video';
 
+// Add YouTube Shorts support directly
+const originalParse = urlParser.parse;
+urlParser.parse = function(url) {
+    // Support for YouTube Shorts
+    if (typeof url === 'string' && url.indexOf('youtube.com/shorts/') !== -1) {
+        const match = url.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/i);
+        if (match && match[1]) {
+            return {
+                mediaType: 'video',
+                id: match[1],
+                provider: 'youtube'
+            };
+        }
+    }
+    
+    // Support for TikTok
+    if (typeof url === 'string' && url.indexOf('tiktok.com') !== -1) {
+        const match = url.match(/tiktok\.com\/@([^\/]+)\/video\/(\d+)/i);
+        if (match && match[2]) {
+            return {
+                mediaType: 'video',
+                id: match[2],
+                provider: 'tiktok'
+            };
+        }
+    }
+    
+    // Call the original parser for non-Shorts URLs
+    if (originalParse) {
+        return originalParse.call(this, url);
+    }
+    
+    return undefined;
+};
+
 const translateAlignments = i => i.replace( 'top', 'start' ).replace( 'left', 'start' ).replace( 'bottom', 'end' ).replace( 'right', 'end' );
 
 const htmlString = html => RawHTML( { children: html } );
@@ -108,6 +143,39 @@ registerBlockType(
 
 			const getVideoThumbnail = value => {
 				if ( value.length > 0 ) {
+					// Check if this is a YouTube Shorts URL
+					const isYoutubeShorts = value.indexOf('youtube.com/shorts/') !== -1;
+					
+					if (isYoutubeShorts) {
+						// For YouTube Shorts, extract the video ID and manually construct the thumbnail URL
+						const shortsMatch = value.match(/youtube\.com\/shorts\/([^#\&\?]*)/);
+						if (shortsMatch && shortsMatch[1]) {
+							const videoId = shortsMatch[1];
+							const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+							setState({ thumbnail: thumbnailUrl, loading: false });
+							return;
+						}
+					}
+					
+					// Check if this is a TikTok URL
+					const isTikTok = value.indexOf('tiktok.com') !== -1;
+					
+					if (isTikTok) {
+						// For TikTok, we'll use a placeholder thumbnail as TikTok doesn't provide direct thumbnail access
+						// We could potentially use a server-side approach to fetch real thumbnails, but that's beyond the scope here
+						const tiktokMatch = value.match(/tiktok\.com\/@([^\/]+)\/video\/(\d+)/i);
+						if (tiktokMatch && tiktokMatch[2]) {
+							// Create an SVG with both a background and the TikTok logo
+							const thumbnailUrl = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNTAwIj4KICAgIDxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTAwIiBmaWxsPSIjZjBmMGYwIiByeD0iMTAiIHJ5PSIxMCIvPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzAwLDg1KSBzY2FsZSgwLjY1KSI+CiAgICAgICAgPHRleHQgeD0iMTgwIiB5PSI0MDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzMzMyI+VGlrVG9rIFZpZGVvPC90ZXh0PgogICAgICAgIDxwYXRoIGZpbGw9IiMwMDAiIGQ9Ik00NDgsMjA5LjkxYTIxMC4wNiwyMTAuMDYsMCwwLDEtMTIyLjc3LTM5LjI1VjM0OS4zOEExNjIuNTUsMTYyLjU1LDAsMSwxLDE4NSwxODguMzFWMjc4LjJhNzQuNjIsNzQuNjIsMCwxLDAsNTIuMjMsNzEuMThWMGw4OCwwYTEyMS4xOCwxMjEuMTgsMCwwLDAsMS44NiwyMi4xN2gwQTEyMi4xOCwxMjIuMTgsMCwwLDAsMzgxLDEwMi4zOWExMjEuNDMsMTIxLjQzLDAsMCwwLDY3LDIwLjE0WiIvPgogICAgPC9nPgo8L3N2Zz4=';
+							setState({ 
+								thumbnail: thumbnailUrl, 
+								loading: false 
+							});
+							return;
+						}
+					}
+					
+					// Standard URL parsing for regular videos
 					const urlParsed = urlParser.parse( value );
 
 					if ( typeof urlParsed !== 'undefined' ) {
@@ -127,9 +195,9 @@ registerBlockType(
 									setState( { thumbnail: '', loading: false } );
 								}
 
-								throw err;
+								console.warn('Error loading thumbnail:', err);
 							} else {
-								if ( thumb.src !== state.thumbnail || false !== state.loading ) {
+								if (thumb && thumb.src && thumb.src !== state.thumbnail || false !== state.loading) {
 									setState( { thumbnail: thumb.src, loading: false } );
 								}
 							}
@@ -188,10 +256,27 @@ registerBlockType(
 
 										{ 'service' === source && <TextControl
 											label={ __( 'Video URL', 'wpzoom-video-popup-block' ) }
-											placeholder={ __( 'e.g. https://youtu.be/GRMSwnJzRDA', 'wpzoom-video-popup-block' ) }
+											placeholder={ __( 'e.g. https://youtu.be/GRMSwnJzRDA or https://youtube.com/shorts/abCD123', 'wpzoom-video-popup-block' ) }
 											value={ url || '' }
 											onChange={ value => {
-												setAttributes( { url: value } );
+												// Detect if this is a portrait video (YouTube Shorts or TikTok)
+												const isYoutubeShorts = value.indexOf('youtube.com/shorts/') !== -1;
+												const isTikTok = value.indexOf('tiktok.com') !== -1;
+												const isPortrait = isYoutubeShorts || isTikTok;
+												
+												// Set the width to 450px for portrait videos, or keep the existing width
+												// Only change the width if switching to a portrait video format or from a portrait to landscape
+												const currentIsPortrait = (url && (url.indexOf('youtube.com/shorts/') !== -1 || url.indexOf('tiktok.com') !== -1));
+												
+												if (isPortrait !== currentIsPortrait) {
+													setAttributes({ 
+														url: value,
+														popupWidth: isPortrait ? '450px' : '900px'
+													});
+												} else {
+													setAttributes({ url: value });
+												}
+												
 												getVideoThumbnail( value );
 											} }
 										/> }
@@ -317,6 +402,7 @@ registerBlockType(
 											{ value: 'px', label: 'px', default: 900 },
 											{ value: '%', label: '%', default: 100 }
 										]}
+										help={ __( 'Note: Width is automatically set to 450px for YouTube Shorts and TikTok videos.', 'wpzoom-video-popup-block' ) }
 									/>
 								</ToolsPanelItem>
 							</ToolsPanel>

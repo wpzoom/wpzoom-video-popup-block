@@ -76,4 +76,18 @@ a.wpzoom-video-popup-block,
     }
 }
 
+/* Portrait orientation styles for YouTube Shorts and TikTok */
+.wpzoom-video-popup-portrait {
+  .mfp-iframe-scaler {
+    padding-top: 177.7778%; /* 16:9 inverted for portrait orientation */
+    max-width: 325px !important;
+    margin: 0 auto;
+  }
+  
+  /* Specific adjustments for TikTok embeds */
+  iframe[src*="tiktok.com"] {
+    background-color: white;
+  }
+}
+
 
