@@ -8,13 +8,13 @@ Stable tag:         1.1.4
 Requires PHP:       7.4
 License:            GPLv2 or later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
-Tags:               video block, video popup, play button, self-hosted, lightbox, youtube shorts
+Tags:               video block, video popup, play button, self-hosted, lightbox, youtube shorts, tiktok
 
-Easily add a Gutenberg block to create customizable Play icon that open popups with YouTube, YouTube Shorts, Vimeo, or MP4 videos
+Easily add a Gutenberg block to create customizable Play icon that open popups with YouTube, YouTube Shorts, TikTok, Vimeo, or MP4 videos
 
 == Description ==
 
-Video Popup Block by WPZOOM - a simple yet powerful single-block WordPress plugin designed to enhance your website with engaging video content. This plugin adds a Gutenberg block to your WordPress editor, enabling you to effortlessly create customizable buttons that, when clicked, open a responsive popup containing a YouTube, YouTube Shorts, Vimeo, or Self-Hosted (MP4) video.
+Video Popup Block by WPZOOM - a simple yet powerful single-block WordPress plugin designed to enhance your website with engaging video content. This plugin adds a Gutenberg block to your WordPress editor, enabling you to effortlessly create customizable buttons that, when clicked, open a responsive popup containing a YouTube, YouTube Shorts, TikTok, Vimeo, or Self-Hosted (MP4) video.
 
 [VIEW DEMO](https://demo.wpzoom.com/inspiro-blocks)
 
@@ -22,7 +22,8 @@ Video Popup Block by WPZOOM - a simple yet powerful single-block WordPress plugi
 == Features ==
 
 * Works with **Vimeo & YouTube** videos
-* Supports **YouTube Shorts** videos in portrait orientation -- *NEW*
+* Supports **YouTube Shorts** videos in portrait orientation
+* Supports **TikTok** videos in portrait orientation -- *NEW*
 * Supports **self-hosted (MP4)** videos
 * Customize the Play button as you want
 * Choose your Play icon
@@ -73,6 +74,7 @@ In the Block editor click on the "+" button to add a new button. Search for "Vid
 == Changelog ==
 
 = 1.1.4 =
+* Added support for TikTok videos with proper portrait orientation
 * Added support for YouTube Shorts URLs with proper portrait orientation
 * Fixed an issue with YouTube Shorts videos not displaying correctly
 

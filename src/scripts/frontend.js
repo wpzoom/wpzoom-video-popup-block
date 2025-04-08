@@ -10,24 +10,30 @@ import magnificPopup from 'magnific-popup';
 			const isMP4 = $this.attr('href').toLowerCase().endsWith('.mp4');
 			// Detect if this is a YouTube Shorts URL
 			const isYoutubeShorts = $this.attr('href').indexOf('youtube.com/shorts/') !== -1;
+			// Detect if this is a TikTok URL
+			const isTikTok = $this.attr('href').indexOf('tiktok.com') !== -1;
+			// For portrait videos (TikTok & Shorts)
+			const isPortrait = isYoutubeShorts || isTikTok;
+			// For portrait videos, use 450px as width regardless of popupWidth setting
+			const effectiveWidth = isPortrait ? '450px' : popupWidth;
 
 			$this.magnificPopup( {
 				type: 'iframe',
-				mainClass: 'wpzoom-video-popup-block-modal' + (isYoutubeShorts ? ' wpzoom-video-popup-shorts' : ''),
+				mainClass: 'wpzoom-video-popup-block-modal' + (isPortrait ? ' wpzoom-video-popup-portrait' : ''),
 				callbacks: {
 					open: function() {
-						// Set width on mfp-content
-						this.contentContainer.css('max-width', popupWidth);
+						// Set width on mfp-content - for portrait videos, always use portrait width
+						this.contentContainer.css('max-width', effectiveWidth);
 						
-						// Add special styling for YouTube Shorts
-						if (isYoutubeShorts) {
+						// Add special styling for portrait videos (YouTube Shorts & TikTok)
+						if (isPortrait) {
 							// Add CSS for portrait orientation
 							$('<style>')
 								.prop('type', 'text/css')
 								.html(`
-									.wpzoom-video-popup-shorts .mfp-iframe-scaler {
+									.wpzoom-video-popup-portrait .mfp-iframe-scaler {
 										padding-top: 177.7778% !important; /* 16:9 inverted for portrait */
-										max-width: 315px !important;
+										max-width: 325px !important;
 										margin: 0 auto;
 									}
 								`)
@@ -39,7 +45,7 @@ import magnificPopup from 'magnific-popup';
 						if (isMP4) {
 							const videoUrl = item.src;
 							item.type = 'inline';
-							item.src = $('<div class="mfp-iframe-scaler" style="max-width: ' + popupWidth + ';">' +
+							item.src = $('<div class="mfp-iframe-scaler" style="max-width: ' + effectiveWidth + ';">' +
 								'<div class="mfp-close">&#215;</div>' +
 								'<video class="mfp-iframe" controls autoplay playsinline style="position: absolute; display: block; top: 0; left: 0; width: 100%; height: 100%; background: #000;">' +
 									'<source src="' + videoUrl + '" type="video/mp4">' +
@@ -103,11 +109,26 @@ import magnificPopup from 'magnific-popup';
 								return hash ? videoId + '?' + hash + params : videoId + params;
 							},
 							src: '//player.vimeo.com/video/%id%'
+						},
+						tiktok: {
+							index: 'tiktok.com',
+							id: function(url) {
+								// Match different TikTok URL formats
+								// Format 1: https://www.tiktok.com/@username/video/1234567890123456789
+								// Format 2: https://www.tiktok.com/@username/video/1234567890123456789?param=value
+								const regex = /tiktok\.com\/@([^\/]+)\/video\/(\d+)/i;
+								const match = url.match(regex);
+								
+								if (!match || !match[2]) return null;
+								
+								return match[2];
+							},
+							src: '//www.tiktok.com/embed/v2/%id%'
 						}
 					},
-					markup: '<div class="mfp-iframe-scaler" style="max-width: ' + (isYoutubeShorts ? '315px' : popupWidth) + ';">' +
+					markup: '<div class="mfp-iframe-scaler" style="max-width: ' + (isPortrait ? '325px' : effectiveWidth) + ';">' +
 							'<div class="mfp-close">&#215;</div>' +
-							'<iframe class="mfp-iframe"' + (isYoutubeShorts ? ' width="315" height="560"' : '') + ' frameborder="0" allowfullscreen></iframe>' +
+							'<iframe class="mfp-iframe"' + (isPortrait ? ' width="325" height="580"' : '') + ' frameborder="0" allowfullscreen></iframe>' +
 							'</div>'
 				}
 			} );

@@ -76,12 +76,17 @@ a.wpzoom-video-popup-block,
     }
 }
 
-/* YouTube Shorts portrait orientation styles */
-.wpzoom-video-popup-shorts {
+/* Portrait orientation styles for YouTube Shorts and TikTok */
+.wpzoom-video-popup-portrait {
   .mfp-iframe-scaler {
     padding-top: 177.7778%; /* 16:9 inverted for portrait orientation */
-    max-width: 315px !important;
+    max-width: 325px !important;
     margin: 0 auto;
+  }
+  
+  /* Specific adjustments for TikTok embeds */
+  iframe[src*="tiktok.com"] {
+    background-color: white;
   }
 }
 
