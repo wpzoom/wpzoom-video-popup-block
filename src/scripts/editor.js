@@ -35,6 +35,28 @@ import 'js-video-url-parser/lib/provider/youtube';
 import 'js-video-url-parser/lib/provider/vimeo';
 import embed from 'embed-video';
 
+// Add YouTube Shorts support directly
+const originalParse = urlParser.parse;
+urlParser.parse = function(url) {
+    if (typeof url === 'string' && url.indexOf('youtube.com/shorts/') !== -1) {
+        const match = url.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/i);
+        if (match && match[1]) {
+            return {
+                mediaType: 'video',
+                id: match[1],
+                provider: 'youtube'
+            };
+        }
+    }
+    
+    // Call the original parser for non-Shorts URLs
+    if (originalParse) {
+        return originalParse.call(this, url);
+    }
+    
+    return undefined;
+};
+
 const translateAlignments = i => i.replace( 'top', 'start' ).replace( 'left', 'start' ).replace( 'bottom', 'end' ).replace( 'right', 'end' );
 
 const htmlString = html => RawHTML( { children: html } );
@@ -108,6 +130,21 @@ registerBlockType(
 
 			const getVideoThumbnail = value => {
 				if ( value.length > 0 ) {
+					// Check if this is a YouTube Shorts URL
+					const isYoutubeShorts = value.indexOf('youtube.com/shorts/') !== -1;
+					
+					if (isYoutubeShorts) {
+						// For YouTube Shorts, extract the video ID and manually construct the thumbnail URL
+						const shortsMatch = value.match(/youtube\.com\/shorts\/([^#\&\?]*)/);
+						if (shortsMatch && shortsMatch[1]) {
+							const videoId = shortsMatch[1];
+							const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+							setState({ thumbnail: thumbnailUrl, loading: false });
+							return;
+						}
+					}
+					
+					// Standard URL parsing for regular videos
 					const urlParsed = urlParser.parse( value );
 
 					if ( typeof urlParsed !== 'undefined' ) {
@@ -127,9 +164,9 @@ registerBlockType(
 									setState( { thumbnail: '', loading: false } );
 								}
 
-								throw err;
+								console.warn('Error loading thumbnail:', err);
 							} else {
-								if ( thumb.src !== state.thumbnail || false !== state.loading ) {
+								if (thumb && thumb.src && thumb.src !== state.thumbnail || false !== state.loading) {
 									setState( { thumbnail: thumb.src, loading: false } );
 								}
 							}
@@ -188,7 +225,7 @@ registerBlockType(
 
 										{ 'service' === source && <TextControl
 											label={ __( 'Video URL', 'wpzoom-video-popup-block' ) }
-											placeholder={ __( 'e.g. https://youtu.be/GRMSwnJzRDA', 'wpzoom-video-popup-block' ) }
+											placeholder={ __( 'e.g. https://youtu.be/GRMSwnJzRDA or https://youtube.com/shorts/abCD123', 'wpzoom-video-popup-block' ) }
 											value={ url || '' }
 											onChange={ value => {
 												setAttributes( { url: value } );

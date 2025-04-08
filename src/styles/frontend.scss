@@ -76,4 +76,13 @@ a.wpzoom-video-popup-block,
     }
 }
 
+/* YouTube Shorts portrait orientation styles */
+.wpzoom-video-popup-shorts {
+  .mfp-iframe-scaler {
+    padding-top: 177.7778%; /* 16:9 inverted for portrait orientation */
+    max-width: 315px !important;
+    margin: 0 auto;
+  }
+}
+
 

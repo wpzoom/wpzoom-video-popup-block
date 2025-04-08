@@ -8,14 +8,31 @@ import magnificPopup from 'magnific-popup';
 			const $this = $(this);
 			const popupWidth = $this.data('popup-width') || '900px';
 			const isMP4 = $this.attr('href').toLowerCase().endsWith('.mp4');
+			// Detect if this is a YouTube Shorts URL
+			const isYoutubeShorts = $this.attr('href').indexOf('youtube.com/shorts/') !== -1;
 
 			$this.magnificPopup( {
 				type: 'iframe',
-				mainClass: 'wpzoom-video-popup-block-modal',
+				mainClass: 'wpzoom-video-popup-block-modal' + (isYoutubeShorts ? ' wpzoom-video-popup-shorts' : ''),
 				callbacks: {
 					open: function() {
 						// Set width on mfp-content
 						this.contentContainer.css('max-width', popupWidth);
+						
+						// Add special styling for YouTube Shorts
+						if (isYoutubeShorts) {
+							// Add CSS for portrait orientation
+							$('<style>')
+								.prop('type', 'text/css')
+								.html(`
+									.wpzoom-video-popup-shorts .mfp-iframe-scaler {
+										padding-top: 177.7778% !important; /* 16:9 inverted for portrait */
+										max-width: 315px !important;
+										margin: 0 auto;
+									}
+								`)
+								.appendTo('head');
+						}
 					},
 					elementParse: function(item) {
 						// For MP4 videos, we need to create the video element
@@ -36,7 +53,17 @@ import magnificPopup from 'magnific-popup';
 						youtube: {
 							index: 'youtu', 
 							id: function ( url ) {
-								const m = url.match( /^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/ );
+								// Check if this is a YouTube Shorts URL
+								const isShorts = url.indexOf('youtube.com/shorts/') !== -1;
+								
+								// Use appropriate regex based on URL type
+								let m;
+								if (isShorts) {
+									m = url.match(/youtube\.com\/shorts\/([^#\&\?]*)/);
+								} else {
+									m = url.match( /^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/ );
+								}
+								
 								if ( ! m || ! m[1] ) return null;
 
 								let start = 0;
@@ -57,7 +84,7 @@ import magnificPopup from 'magnific-popup';
 
 								let suffix = '?autoplay=1';
 
-								if ( start > 0 ) {
+								if (start > 0) {
 									suffix = `?start=${start}&autoplay=1`;
 								}
 
@@ -78,9 +105,9 @@ import magnificPopup from 'magnific-popup';
 							src: '//player.vimeo.com/video/%id%'
 						}
 					},
-					markup: '<div class="mfp-iframe-scaler" style="max-width: ' + popupWidth + ';">' +
+					markup: '<div class="mfp-iframe-scaler" style="max-width: ' + (isYoutubeShorts ? '315px' : popupWidth) + ';">' +
 							'<div class="mfp-close">&#215;</div>' +
-							'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>' +
+							'<iframe class="mfp-iframe"' + (isYoutubeShorts ? ' width="315" height="560"' : '') + ' frameborder="0" allowfullscreen></iframe>' +
 							'</div>'
 				}
 			} );

@@ -7,11 +7,13 @@ const webpack                  = require( 'webpack' ),
 module.exports = {
 	...defaultConfig,
 
-	entry: glob.sync( './src/**/*.{js,ts,scss}' ).reduce( ( acc, path ) => {
-		const entry  = path.replace( /^\.\/src\//i, '' ).replace( /\.(js|ts|scss)/i, '' );
-		acc[ entry ] = path;
-		return acc;
-	}, {} ),
+	entry: glob.sync( './src/**/*.{js,ts,scss}' )
+		.filter( path => !path.includes('youtube-shorts-parser.js') )
+		.reduce( ( acc, path ) => {
+			const entry  = path.replace( /^\.\/src\//i, '' ).replace( /\.(js|ts|scss)/i, '' );
+			acc[ entry ] = path;
+			return acc;
+		}, {} ),
 
 	output: {
 		filename: '[name].js',
