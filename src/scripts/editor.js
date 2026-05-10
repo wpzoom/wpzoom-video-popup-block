@@ -21,6 +21,7 @@ import {
 	Flex,
 	FlexItem,
 	RadioControl,
+	SelectControl,
 	__experimentalUnitControl as UnitControl,
 	__experimentalAlignmentMatrixControl as AlignmentMatrixControl,
 	__experimentalToggleGroupControl as ToggleGroupControl,
@@ -70,6 +71,27 @@ urlParser.parse = function(url) {
     return undefined;
 };
 
+const ASPECT_RATIO_OPTIONS = [
+	{ label: '16:9', value: '16:9' },
+	{ label: '21:9 (Ultrawide)', value: '21:9' },
+	{ label: '2.39:1 (Cinemascope)', value: '2.39:1' },
+	{ label: '4:3', value: '4:3' },
+	{ label: '1:1 (Square)', value: '1:1' },
+	{ label: '9:16 (Portrait)', value: '9:16' },
+];
+
+const getAspectRatioPadding = ( ratio ) => {
+	switch ( ratio ) {
+		case '21:9':   return '42.857%';
+		case '2.39:1': return '41.841%';
+		case '4:3':    return '75%';
+		case '1:1':    return '100%';
+		case '9:16':   return '177.778%';
+		case '16:9':
+		default:       return '56.25%';
+	}
+};
+
 const translateAlignments = i => i.replace( 'top', 'start' ).replace( 'left', 'start' ).replace( 'bottom', 'end' ).replace( 'right', 'end' );
 
 const htmlString = html => RawHTML( { children: html } );
@@ -102,7 +124,7 @@ const contentOutput = ( attributes, save = false ) => {
 };
 
 const contentOutputNew = ( attributes, save = false ) => {
-	const { source, url, libraryId, text, position, icon, iconColor, iconSize, popupWidth } = attributes;
+	const { source, url, libraryId, text, position, icon, iconColor, iconSize, popupWidth, aspectRatio } = attributes;
 	const libId      = parseInt( libraryId, 10 );
 	const ico        = icon && icon > 0 && icon < 5 ? playIcons[`icon${icon}`] : playIcons.icon1;
 	const iClr       = iconColor ? iconColor : undefined;
@@ -112,11 +134,12 @@ const contentOutputNew = ( attributes, save = false ) => {
 	const alignVert  = posArgs.length > 0 ? posArgs[0] : undefined;
 	const alignHorz  = posArgs.length > 1 ? posArgs[1] : undefined;
 	const buttonHref = url && typeof url === 'string' && url.length > 0 && ( ( 'service' === source && typeof urlParser.parse( url ) !== 'undefined' ) || 'local' === source ) ? url : undefined;
-	const blkProps   = { 
-		className: 'wpzoom-video-popup-block', 
-		href: buttonHref, 
+	const blkProps   = {
+		className: 'wpzoom-video-popup-block',
+		href: buttonHref,
 		style: { alignItems: alignVert, justifyContent: alignHorz },
-		'data-popup-width': popupWidth
+		'data-popup-width': popupWidth,
+		'data-aspect-ratio': aspectRatio && aspectRatio !== '16:9' ? aspectRatio : undefined
 	};
 	if ( ! save ) blkProps.onClick = e => e.preventDefault();
 	const blockProps = save ? useBlockProps.save( blkProps ) : useBlockProps( blkProps );
@@ -134,7 +157,7 @@ registerBlockType(
 	{
 		edit: ( props ) => {
 			const { attributes, setAttributes, clientId } = props;
-			const { source, url, libraryId, text, position, icon, iconColor, iconSize, popupWidth } = attributes;
+			const { source, url, libraryId, text, position, icon, iconColor, iconSize, popupWidth, aspectRatio } = attributes;
 			const [ state, setState ] = useState( { thumbnail: '', loading: false } );
 			const libId = parseInt( libraryId, 10 );
 			const Root = styled.div`box-sizing: border-box; max-width: 235px; padding-bottom: 12px; width: 100%;`;
@@ -212,6 +235,38 @@ registerBlockType(
 				}
 			};
 
+			const detectVideoAspectRatio = ( videoUrl ) => {
+				const video = document.createElement( 'video' );
+				video.preload = 'metadata';
+				video.onloadedmetadata = () => {
+					const w = video.videoWidth;
+					const h = video.videoHeight;
+					if ( w && h ) {
+						const ratio = w / h;
+						// Find closest preset
+						const presets = [
+							{ value: '1:1', ratio: 1 },
+							{ value: '4:3', ratio: 4/3 },
+							{ value: '16:9', ratio: 16/9 },
+							{ value: '21:9', ratio: 21/9 },
+							{ value: '2.39:1', ratio: 2.39 },
+							{ value: '9:16', ratio: 9/16 },
+						];
+						let closest = presets[0];
+						let minDiff = Math.abs( ratio - presets[0].ratio );
+						for ( const preset of presets ) {
+							const diff = Math.abs( ratio - preset.ratio );
+							if ( diff < minDiff ) {
+								minDiff = diff;
+								closest = preset;
+							}
+						}
+						setAttributes( { aspectRatio: closest.value } );
+					}
+				};
+				video.src = videoUrl;
+			};
+
 			useEffect( () => getVideoThumbnail( url || '' ), [ url ] );
 
 			return (
@@ -285,6 +340,7 @@ registerBlockType(
 											<MediaUpload
 												onSelect={ media => {
 													setAttributes( { url: media.url, libraryId: media.id } );
+													detectVideoAspectRatio( media.url );
 												} }
 												onClose={ () => setState( { loading: false } ) }
 												allowedTypes={ [ 'video' ] }
@@ -385,7 +441,7 @@ registerBlockType(
 
 							<ToolsPanel
 								label={ __( 'Popup Settings', 'wpzoom-video-popup-block' ) }
-								resetAllFilter={ ( attrs ) => ( { ...attrs, popupWidth: '900px' } ) }
+								resetAllFilter={ ( attrs ) => ( { ...attrs, popupWidth: '900px', aspectRatio: '16:9' } ) }
 							>
 								<ToolsPanelItem
 									label={ __( 'Popup Width', 'wpzoom-video-popup-block' ) }
@@ -403,6 +459,22 @@ registerBlockType(
 											{ value: '%', label: '%', default: 100 }
 										]}
 										help={ __( 'Note: Width is automatically set to 450px for YouTube Shorts and TikTok videos.', 'wpzoom-video-popup-block' ) }
+									/>
+								</ToolsPanelItem>
+
+								<ToolsPanelItem
+									label={ __( 'Aspect Ratio', 'wpzoom-video-popup-block' ) }
+									hasValue={ () => aspectRatio && aspectRatio !== '16:9' }
+									onDeselect={ () => setAttributes( { aspectRatio: '16:9' } ) }
+									isShownByDefault
+									resetAllFilter={ attrs => ( { ...attrs, aspectRatio: '16:9' } ) }
+								>
+									<SelectControl
+										label={ __( 'Aspect Ratio', 'wpzoom-video-popup-block' ) }
+										value={ aspectRatio || '16:9' }
+										options={ ASPECT_RATIO_OPTIONS }
+										onChange={ value => setAttributes( { aspectRatio: value } ) }
+										help={ __( 'For self-hosted MP4 videos, the aspect ratio is auto-detected when a video is selected.', 'wpzoom-video-popup-block' ) }
 									/>
 								</ToolsPanelItem>
 							</ToolsPanel>
@@ -540,13 +612,62 @@ registerBlockType(
 					iconSize: {
 						type: 'string',
 						default: ''
+					},
+					popupWidth: {
+						type: 'string',
+						default: '900px'
+					}
+				},
+				save: props => contentOutputNew( props.attributes, true ),
+				migrate: ( attributes ) => {
+					return {
+						...attributes,
+						popupWidth: attributes.popupWidth || '900px',
+						aspectRatio: '16:9'
+					};
+				}
+			},
+			{
+				attributes: {
+					source: {
+						type: 'string',
+						default: 'service'
+					},
+					url: {
+						type: 'string',
+						default: ''
+					},
+					libraryId: {
+						type: 'integer',
+						default: -1
+					},
+					text: {
+						type: 'string',
+						default: 'Play'
+					},
+					position: {
+						type: 'string',
+						default: ''
+					},
+					icon: {
+						type: 'integer',
+						default: 1
+					},
+					iconColor: {
+						type: 'string',
+						default: ''
+					},
+					iconSize: {
+						type: 'string',
+						default: ''
 					}
 				},
 				save: props => contentOutput( props.attributes, true ),
 				migrate: ( attributes ) => {
 					return {
 						...attributes,
-						popupWidth: '900px'
+						popupWidth: '900px',
+						aspectRatio: '16:9'
 					};
 				}
 			}

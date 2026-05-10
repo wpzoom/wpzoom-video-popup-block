@@ -43,6 +43,10 @@
 		"popupWidth": {
 			"type": "string",
 			"default": "900px"
+		},
+		"aspectRatio": {
+			"type": "string",
+			"default": "16:9"
 		}
 	},
 	"supports":     {

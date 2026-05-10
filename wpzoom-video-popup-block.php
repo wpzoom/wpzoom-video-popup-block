@@ -3,16 +3,16 @@
  * Plugin Name: Video Popup Block by WPZOOM
  * Plugin URI: https://wordpress.org/plugins/wpzoom-video-popup-block/
  * Description: Quickly add a button displaying a YouTube, YouTube Shorts, TikTok, Vimeo or Self-Hosted (MP4) video in a popup when clicked.
- * Version: 1.1.4
+ * Version: 1.1.5
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: wpzoom-video-popup-block
  * Domain Path: /languages
  * License: GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Requires at least: 6.0
+ * Requires at least: 6.4
  * Requires PHP:      7.4
- * Tested up to: 6.8
+ * Tested up to: 7.0
  *
  * @package Wpzoom_Video_Popup_Block
  */
@@ -39,7 +39,7 @@ class Plugin {
 	 * @since 1.0.0
 	 * @var   int
 	 */
-	public const VERSION = '1.1.4';
+	public const VERSION = '1.1.5';
 
 	/**
 	 * Path to the plugin directory.

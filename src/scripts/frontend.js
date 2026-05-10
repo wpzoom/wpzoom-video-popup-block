@@ -7,6 +7,7 @@ import magnificPopup from 'magnific-popup';
 		$( '.wpzoom-video-popup-block[href]' ).each(function() {
 			const $this = $(this);
 			const popupWidth = $this.data('popup-width') || '900px';
+			const aspectRatio = $this.data('aspect-ratio') || '16:9';
 			const isMP4 = $this.attr('href').toLowerCase().endsWith('.mp4');
 			// Detect if this is a YouTube Shorts URL
 			const isYoutubeShorts = $this.attr('href').indexOf('youtube.com/shorts/') !== -1;
@@ -17,6 +18,21 @@ import magnificPopup from 'magnific-popup';
 			// For portrait videos, use 450px as width regardless of popupWidth setting
 			const effectiveWidth = isPortrait ? '450px' : popupWidth;
 
+			// Calculate padding-top from aspect ratio
+			const getAspectRatioPadding = ( ratio ) => {
+				switch ( ratio ) {
+					case '21:9':   return '42.857%';
+					case '2.39:1': return '41.841%';
+					case '4:3':    return '75%';
+					case '1:1':    return '100%';
+					case '9:16':   return '177.778%';
+					case '16:9':
+					default:       return '56.25%';
+				}
+			};
+			const paddingTop = isPortrait ? '177.778%' : getAspectRatioPadding( aspectRatio );
+			const useCustomRatio = ! isPortrait && aspectRatio && aspectRatio !== '16:9';
+
 			$this.magnificPopup( {
 				type: 'iframe',
 				mainClass: 'wpzoom-video-popup-block-modal' + (isPortrait ? ' wpzoom-video-popup-portrait' : ''),
@@ -24,28 +40,40 @@ import magnificPopup from 'magnific-popup';
 					open: function() {
 						// Set width on mfp-content - for portrait videos, always use portrait width
 						this.contentContainer.css('max-width', effectiveWidth);
-						
-						// Add special styling for portrait videos (YouTube Shorts & TikTok)
+
+						// Apply custom aspect ratio or portrait styling
 						if (isPortrait) {
-							// Add CSS for portrait orientation
-							$('<style>')
+							$('<style id="wpzoom-popup-ratio-style">')
 								.prop('type', 'text/css')
 								.html(`
 									.wpzoom-video-popup-portrait .mfp-iframe-scaler {
-										padding-top: 177.7778% !important; /* 16:9 inverted for portrait */
+										padding-top: 177.778% !important;
 										max-width: 325px !important;
 										margin: 0 auto;
 									}
 								`)
 								.appendTo('head');
+						} else if (useCustomRatio) {
+							$('<style id="wpzoom-popup-ratio-style">')
+								.prop('type', 'text/css')
+								.html(`
+									.wpzoom-video-popup-block-modal .mfp-iframe-scaler {
+										padding-top: ${paddingTop} !important;
+									}
+								`)
+								.appendTo('head');
 						}
+					},
+					close: function() {
+						$('#wpzoom-popup-ratio-style').remove();
 					},
 					elementParse: function(item) {
 						// For MP4 videos, we need to create the video element
 						if (isMP4) {
 							const videoUrl = item.src;
+							const scalerPadding = useCustomRatio ? paddingTop : '56.25%';
 							item.type = 'inline';
-							item.src = $('<div class="mfp-iframe-scaler" style="max-width: ' + effectiveWidth + ';">' +
+							item.src = $('<div class="mfp-iframe-scaler" style="max-width: ' + effectiveWidth + '; padding-top: ' + scalerPadding + ';">' +
 								'<div class="mfp-close">&#215;</div>' +
 								'<video class="mfp-iframe" controls autoplay playsinline style="position: absolute; display: block; top: 0; left: 0; width: 100%; height: 100%; background: #000;">' +
 									'<source src="' + videoUrl + '" type="video/mp4">' +
