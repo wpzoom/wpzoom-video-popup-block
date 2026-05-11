@@ -1,6 +1,6 @@
 {
 	"$schema":      "https://json.schemastore.org/block.json",
-	"apiVersion":   2,
+	"apiVersion":   3,
 	"name":         "wpzoom-video-popup-block/block",
 	"title":        "WPZOOM Video Popup Block",
 	"textdomain":   "wpzoom-video-popup-block",
@@ -78,7 +78,7 @@
 		}
 	},
 	"example":      {},
-	"script":       "file:./dist/scripts/frontend.js",
+	"viewScript":   "file:./dist/scripts/frontend.js",
 	"editorScript": "file:./dist/scripts/editor.js",
 	"style":        "file:./dist/styles/frontend.css",
 	"editorStyle":  "file:./dist/styles/editor.css"
