@@ -3,7 +3,7 @@
  * Plugin Name: Video Popup Block by WPZOOM
  * Plugin URI: https://wordpress.org/plugins/wpzoom-video-popup-block/
  * Description: Quickly add a button displaying a YouTube, YouTube Shorts, TikTok, Vimeo or Self-Hosted (MP4) video in a popup when clicked.
- * Version: 1.1.6
+ * Version: 1.1.7
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: wpzoom-video-popup-block
@@ -12,7 +12,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Requires at least: 6.4
  * Requires PHP:      7.4
- * Tested up to: 7.0
+ * Tested up to: 7.1
  *
  * @package Wpzoom_Video_Popup_Block
  */
@@ -39,7 +39,7 @@ class Plugin {
 	 * @since 1.0.0
 	 * @var   int
 	 */
-	public const VERSION = '1.1.6';
+	public const VERSION = '1.1.7';
 
 	/**
 	 * Path to the plugin directory.
@@ -120,14 +120,23 @@ class Plugin {
 		);
 
 		// Register the main block in Gutenberg.
-		register_block_type( $this->plugin_path . 'block.json' );
+		$block_type = register_block_type( $this->plugin_path . 'block.json' );
 
-		// Setup translations for the main block.
-		wp_set_script_translations(
-			'wpzoom-video-popup-block-block-editor-script-js',
-			'wpzoom-video-popup-block',
-			$this->plugin_path . 'languages/'
-		);
+		// Setup translations for both the editor and the frontend scripts of the block.
+		if ( $block_type instanceof \WP_Block_Type ) {
+			$script_handles = array_merge(
+				(array) $block_type->editor_script_handles,
+				(array) $block_type->view_script_handles
+			);
+
+			foreach ( $script_handles as $script_handle ) {
+				wp_set_script_translations(
+					$script_handle,
+					'wpzoom-video-popup-block',
+					$this->plugin_path . 'languages/'
+				);
+			}
+		}
 	}
 
 	/**

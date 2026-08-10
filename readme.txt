@@ -3,8 +3,8 @@ Contributors:       wpzoom
 Donate link:        http://paypal.me/wpzm/10usd
 Author URI:         https://www.wpzoom.com/
 Requires at least:  6.4
-Tested up to:       7.0
-Stable tag:         1.1.6
+Tested up to:       7.1
+Stable tag:         1.1.7
 Requires PHP:       7.4
 License:            GPLv2 or later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,6 +76,12 @@ In the Block editor click on the "+" button to add a new button. Search for "Vid
 
 
 == Changelog ==
+
+= 1.1.7 =
+* Fixed the "Close (Esc)" and "Loading..." strings in the video popup not being translatable
+* Fixed translations not loading for the block editor strings
+* Added a title and aria-label to the popup close button
+* Updated the translation template file with all missing strings
 
 = 1.1.6 =
 * Added compatibility with WordPress 7.0

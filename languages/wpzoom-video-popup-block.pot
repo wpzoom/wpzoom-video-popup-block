@@ -1,43 +1,279 @@
-#, fuzzy
+# Copyright (C) 2026 WPZOOM
+# This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPZOOM Video Popup Block\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-13 12:31+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: Video Popup Block by WPZOOM 1.1.7\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpzoom-video-popup-block\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.6.2; wp-6.0.1\n"
-"X-Domain: wpzoom-video-popup-block"
+"POT-Creation-Date: 2026-08-10T10:55:22+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: wpzoom-video-popup-block\n"
 
-#. URI of the plugin
-msgid "https://wordpress.org/plugins/wpzoom-video-popup-block/"
-msgstr ""
-
-#. Author URI of the plugin
-msgid "https://www.wpzoom.com/"
-msgstr ""
-
-#. Description of the plugin
-msgid ""
-"Quickly add a button displaying a YouTube, YouTube Shorts, TikTok, Vimeo or "
-"Self-Hosted (MP4) video in a popup when clicked."
-msgstr ""
-
-#. Name of the plugin
+#. Plugin Name of the plugin
+#: wpzoom-video-popup-block.php
 msgid "Video Popup Block by WPZOOM"
 msgstr ""
 
+#. Plugin URI of the plugin
+#: wpzoom-video-popup-block.php
+msgid "https://wordpress.org/plugins/wpzoom-video-popup-block/"
+msgstr ""
+
+#. Description of the plugin
+#: wpzoom-video-popup-block.php
+msgid "Quickly add a button displaying a YouTube, YouTube Shorts, TikTok, Vimeo or Self-Hosted (MP4) video in a popup when clicked."
+msgstr ""
+
 #. Author of the plugin
+#: wpzoom-video-popup-block.php
 msgid "WPZOOM"
 msgstr ""
 
-#: wpzoom-video-popup-block.php:147
+#. Author URI of the plugin
+#: wpzoom-video-popup-block.php
+msgid "https://www.wpzoom.com/"
+msgstr ""
+
+#: wpzoom-video-popup-block.php:156
 msgid "WPZOOM - Blocks"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:277
+#: dist/scripts/editor.js:5985
+msgid "Content"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:281
+#: src/scripts/editor.js:313
+#: dist/scripts/editor.js:5989
+#: dist/scripts/editor.js:6021
+msgid "Video URL"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:290
+#: dist/scripts/editor.js:5998
+msgid "Video Source"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:295
+#: dist/scripts/editor.js:6003
+msgid "External <small><em>(i.e. YouTube, Vimeo, etc.)</em></small>"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:299
+#: dist/scripts/editor.js:6007
+msgid "Self-hosted MP4 <small><em>(i.e. Media Library)</em></small>"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:314
+#: dist/scripts/editor.js:6022
+msgid "e.g. https://youtu.be/GRMSwnJzRDA or https://youtube.com/shorts/abCD123"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:351
+#: dist/scripts/editor.js:6059
+msgid "Replace"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:351
+#: dist/scripts/editor.js:6059
+msgid "Select"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:362
+#: dist/scripts/editor.js:6070
+msgid "Remove"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:388
+#: src/scripts/editor.js:395
+#: src/scripts/editor.js:486
+#: src/scripts/editor.js:499
+#: dist/scripts/editor.js:6096
+#: dist/scripts/editor.js:6103
+#: dist/scripts/editor.js:6194
+#: dist/scripts/editor.js:6207
+msgid "Icon"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:403
+#: dist/scripts/editor.js:6111
+msgid "Icon 1"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:409
+#: dist/scripts/editor.js:6117
+msgid "Icon 2"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:415
+#: dist/scripts/editor.js:6123
+msgid "Icon 3"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:421
+#: dist/scripts/editor.js:6129
+msgid "Icon 4"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:427
+#: src/scripts/editor.js:434
+#: dist/scripts/editor.js:6135
+#: dist/scripts/editor.js:6142
+msgid "Text"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:435
+#: dist/scripts/editor.js:6143
+msgid "e.g. Play"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:443
+#: dist/scripts/editor.js:6151
+msgid "Popup Settings"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:447
+#: src/scripts/editor.js:454
+#: dist/scripts/editor.js:6155
+#: dist/scripts/editor.js:6162
+msgid "Popup Width"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:461
+#: dist/scripts/editor.js:6169
+msgid "Note: Width is automatically set to 450px for YouTube Shorts and TikTok videos."
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:466
+#: src/scripts/editor.js:473
+#: dist/scripts/editor.js:6174
+#: dist/scripts/editor.js:6181
+msgid "Aspect Ratio"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:477
+#: dist/scripts/editor.js:6185
+msgid "For self-hosted MP4 videos, the aspect ratio is auto-detected when a video is selected."
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:514
+#: src/scripts/editor.js:525
+#: dist/scripts/editor.js:6222
+#: dist/scripts/editor.js:6233
+msgid "Content Position"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:532
+#: dist/scripts/editor.js:6240
+msgid "Change content position"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:541
+#: src/scripts/editor.js:552
+#: dist/scripts/editor.js:6249
+#: dist/scripts/editor.js:6260
+msgid "Icon Size"
+msgstr ""
+
+#: dist/scripts/editor.js:1
+#: src/scripts/editor.js:559
+#: dist/scripts/editor.js:6267
+msgid "Change icon size"
+msgstr ""
+
+#: dist/scripts/frontend.js:1
+#: src/scripts/frontend.js:9
+#: dist/scripts/frontend.js:1896
+msgid "Close (Esc)"
+msgstr ""
+
+#: dist/scripts/frontend.js:1
+#: src/scripts/frontend.js:10
+#: dist/scripts/frontend.js:1897
+msgid "Loading..."
+msgstr ""
+
+#: block.json
+msgctxt "block title"
+msgid "WPZOOM Video Popup Block"
+msgstr ""
+
+#: block.json
+msgctxt "block keyword"
+msgid "video"
+msgstr ""
+
+#: block.json
+msgctxt "block keyword"
+msgid "popup"
+msgstr ""
+
+#: block.json
+msgctxt "block keyword"
+msgid "block"
+msgstr ""
+
+#: block.json
+msgctxt "block keyword"
+msgid "wpzoom"
+msgstr ""
+
+#: block.json
+msgctxt "block keyword"
+msgid "lightbox"
+msgstr ""
+
+#: block.json
+msgctxt "block keyword"
+msgid "youtube"
+msgstr ""
+
+#: block.json
+msgctxt "block keyword"
+msgid "vimeo"
+msgstr ""
+
+#: block.json
+msgctxt "block keyword"
+msgid "interactive"
+msgstr ""
+
+#: block.json
+msgctxt "block keyword"
+msgid "click"
+msgstr ""
+
+#: block.json
+msgctxt "block keyword"
+msgid "customization"
 msgstr ""

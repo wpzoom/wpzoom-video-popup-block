@@ -1,9 +1,23 @@
 'use strict';
 
 import magnificPopup from 'magnific-popup';
+import { __ } from '@wordpress/i18n';
 
 ( function ( $ ) {
 	$( function () {
+		// Strings used by the popup, translatable through the plugin text domain.
+		const tClose   = __( 'Close (Esc)', 'wpzoom-video-popup-block' );
+		const tLoading = __( 'Loading...', 'wpzoom-video-popup-block' );
+
+		// Escapes a string for safe use inside an HTML attribute.
+		const escAttr = ( text ) => String( text )
+			.replace( /&/g, '&amp;' )
+			.replace( /</g, '&lt;' )
+			.replace( />/g, '&gt;' )
+			.replace( /"/g, '&quot;' );
+
+		const closeMarkup = '<div class="mfp-close" title="' + escAttr( tClose ) + '" aria-label="' + escAttr( tClose ) + '">&#215;</div>';
+
 		$( '.wpzoom-video-popup-block[href]' ).each(function() {
 			const $this = $(this);
 			const popupWidth = $this.data('popup-width') || '900px';
@@ -35,6 +49,8 @@ import magnificPopup from 'magnific-popup';
 
 			$this.magnificPopup( {
 				type: 'iframe',
+				tClose: tClose,
+				tLoading: tLoading,
 				mainClass: 'wpzoom-video-popup-block-modal' + (isPortrait ? ' wpzoom-video-popup-portrait' : ''),
 				callbacks: {
 					open: function() {
@@ -74,7 +90,7 @@ import magnificPopup from 'magnific-popup';
 							const scalerPadding = useCustomRatio ? paddingTop : '56.25%';
 							item.type = 'inline';
 							item.src = $('<div class="mfp-iframe-scaler" style="max-width: ' + effectiveWidth + '; padding-top: ' + scalerPadding + ';">' +
-								'<div class="mfp-close">&#215;</div>' +
+								closeMarkup +
 								'<video class="mfp-iframe" controls autoplay playsinline style="position: absolute; display: block; top: 0; left: 0; width: 100%; height: 100%; background: #000;">' +
 									'<source src="' + videoUrl + '" type="video/mp4">' +
 								'</video>' +
@@ -155,7 +171,7 @@ import magnificPopup from 'magnific-popup';
 						}
 					},
 					markup: '<div class="mfp-iframe-scaler" style="max-width: ' + (isPortrait ? '325px' : effectiveWidth) + ';">' +
-							'<div class="mfp-close">&#215;</div>' +
+							closeMarkup +
 							'<iframe class="mfp-iframe"' + (isPortrait ? ' width="325" height="580"' : '') + ' frameborder="0" allowfullscreen></iframe>' +
 							'</div>'
 				}
