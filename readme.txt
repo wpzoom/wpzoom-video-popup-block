@@ -2,7 +2,7 @@
 Contributors:       wpzoom
 Donate link:        http://paypal.me/wpzm/10usd
 Author URI:         https://www.wpzoom.com/
-Requires at least:  6.4
+Requires at least:  6.6
 Tested up to:       7.1
 Stable tag:         1.1.7
 Requires PHP:       7.4
