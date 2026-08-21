@@ -57,6 +57,13 @@
 			"gradients":                   false,
 			"text":                        true
 		},
+		"background":           {
+			"backgroundImage":             true,
+			"backgroundSize":              true
+		},
+		"dimensions":           {
+			"minHeight":                   true
+		},
 		"spacing":              {
 			"padding":                     true,
 			"margin":                      true
