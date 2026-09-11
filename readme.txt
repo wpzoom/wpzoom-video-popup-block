@@ -4,7 +4,7 @@ Donate link:        http://paypal.me/wpzm/10usd
 Author URI:         https://www.wpzoom.com/
 Requires at least:  6.4
 Tested up to:       7.1
-Stable tag:         1.1.7
+Stable tag:         1.1.8
 Requires PHP:       7.4
 License:            GPLv2 or later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,6 +76,9 @@ In the Block editor click on the "+" button to add a new button. Search for "Vid
 
 
 == Changelog ==
+
+= 1.1.8 =
+* Added an accessible name ("Play video") to popup links that show only the play icon, and marked the icon as decorative. Fixes the "Links must have discernible text" accessibility audit
 
 = 1.1.7 =
 * Fixed the "Close (Esc)" and "Loading..." strings in the video popup not being translatable

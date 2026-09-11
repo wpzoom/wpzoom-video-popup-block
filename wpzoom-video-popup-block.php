@@ -3,7 +3,7 @@
  * Plugin Name: Video Popup Block by WPZOOM
  * Plugin URI: https://wordpress.org/plugins/wpzoom-video-popup-block/
  * Description: Quickly add a button displaying a YouTube, YouTube Shorts, TikTok, Vimeo or Self-Hosted (MP4) video in a popup when clicked.
- * Version: 1.1.7
+ * Version: 1.1.8
  * Author: WPZOOM
  * Author URI: https://www.wpzoom.com/
  * Text Domain: wpzoom-video-popup-block
@@ -39,7 +39,7 @@ class Plugin {
 	 * @since 1.0.0
 	 * @var   int
 	 */
-	public const VERSION = '1.1.7';
+	public const VERSION = '1.1.8';
 
 	/**
 	 * Path to the plugin directory.
@@ -103,6 +103,48 @@ class Plugin {
 		// Add some useful CSS classes.
 		add_filter( 'body_class', array( $this, 'body_class' ) );
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
+
+		// Make sure icon-only popup links have an accessible name.
+		add_filter( 'render_block_' . $this->block_name, array( $this, 'add_accessible_name' ) );
+	}
+
+	/**
+	 * Adds an accessible name to the popup link when it contains only the play icon.
+	 *
+	 * The block saves a plain `<a>` with the icon and an optional label; when the label is
+	 * removed, screen readers and accessibility audits ("Links must have discernible text")
+	 * have nothing to announce. Doing this at render time also covers already-saved blocks
+	 * and keeps the translated label out of the saved post content.
+	 *
+	 * @since  1.1.8
+	 * @param  string $block_content Rendered block HTML.
+	 * @return string
+	 */
+	public function add_accessible_name( $block_content ) {
+		if ( empty( $block_content ) || ! class_exists( '\WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+
+		// Any text outside the icon counts as a label.
+		$label = trim( wp_strip_all_tags( preg_replace( '/<span class="wpzoom-video-popup-block_icon".*?<\/span>/s', '', $block_content ) ) );
+
+		$processor = new \WP_HTML_Tag_Processor( $block_content );
+
+		if ( ! $processor->next_tag( 'a' ) ) {
+			return $block_content;
+		}
+
+		if ( '' === $label && null === $processor->get_attribute( 'aria-label' ) ) {
+			$processor->set_attribute( 'aria-label', __( 'Play video', 'wpzoom-video-popup-block' ) );
+		}
+
+		// The play icon is decorative either way.
+		if ( $processor->next_tag( 'svg' ) && null === $processor->get_attribute( 'aria-hidden' ) ) {
+			$processor->set_attribute( 'aria-hidden', 'true' );
+			$processor->set_attribute( 'focusable', 'false' );
+		}
+
+		return $processor->get_updated_html();
 	}
 
 	/**
