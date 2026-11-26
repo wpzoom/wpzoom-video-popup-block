@@ -96,6 +96,19 @@ const translateAlignments = i => i.replace( 'top', 'start' ).replace( 'left', 's
 
 const htmlString = html => RawHTML( { children: html } );
 
+// Only http(s) URLs (absolute or relative) may be saved as the popup link.
+const isSafeUrl = url => {
+	try {
+		const protocol = new URL( url.trim(), window.location.href ).protocol;
+		return 'http:' === protocol || 'https:' === protocol;
+	} catch ( e ) {
+		return false;
+	}
+};
+
+// The link is only output for a safe URL that the selected source can play.
+const getButtonHref = ( source, url ) => url && typeof url === 'string' && url.length > 0 && isSafeUrl( url ) && ( ( 'service' === source && typeof urlParser.parse( url ) !== 'undefined' ) || 'local' === source ) ? url : undefined;
+
 const contentOutput = ( attributes, save = false ) => {
 	const { source, url, libraryId, text, position, icon, iconColor, iconSize } = attributes;
 	const libId      = parseInt( libraryId, 10 );
@@ -106,7 +119,7 @@ const contentOutput = ( attributes, save = false ) => {
 	const posArgs    = position && typeof position === 'string' && position.trim().length > 0 ? translateAlignments( position ).split( ' ' ) : [];
 	const alignVert  = posArgs.length > 0 ? posArgs[0] : undefined;
 	const alignHorz  = posArgs.length > 1 ? posArgs[1] : undefined;
-	const buttonHref = url && typeof url === 'string' && url.length > 0 && ( ( 'service' === source && typeof urlParser.parse( url ) !== 'undefined' ) || 'local' === source ) ? url : undefined;
+	const buttonHref = getButtonHref( source, url );
 	const blkProps   = { 
 		className: 'wpzoom-video-popup-block', 
 		href: buttonHref, 
@@ -133,7 +146,7 @@ const contentOutputNew = ( attributes, save = false ) => {
 	const posArgs    = position && typeof position === 'string' && position.trim().length > 0 ? translateAlignments( position ).split( ' ' ) : [];
 	const alignVert  = posArgs.length > 0 ? posArgs[0] : undefined;
 	const alignHorz  = posArgs.length > 1 ? posArgs[1] : undefined;
-	const buttonHref = url && typeof url === 'string' && url.length > 0 && ( ( 'service' === source && typeof urlParser.parse( url ) !== 'undefined' ) || 'local' === source ) ? url : undefined;
+	const buttonHref = getButtonHref( source, url );
 	const blkProps   = {
 		className: 'wpzoom-video-popup-block',
 		href: buttonHref,

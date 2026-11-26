@@ -18,15 +18,45 @@ import { __ } from '@wordpress/i18n';
 
 		const closeMarkup = '<div class="mfp-close" title="' + escAttr( tClose ) + '" aria-label="' + escAttr( tClose ) + '">&#215;</div>';
 
+		// Everything read from the link's attributes is post content, so it is untrusted.
+
+		// Returns the URL unchanged if it resolves to http(s), otherwise null.
+		// Resolving with the URL parser treats the value the same way the browser would
+		// (e.g. `java\tscript:` is still `javascript:`), unlike a regular expression.
+		const getSafeUrl = ( value ) => {
+			if ( typeof value !== 'string' || '' === value.trim() ) return null;
+
+			try {
+				const protocol = new URL( value.trim(), window.location.href ).protocol;
+				return 'http:' === protocol || 'https:' === protocol ? value.trim() : null;
+			} catch ( e ) {
+				return null;
+			}
+		};
+
+		// Returns the value if it is a plain CSS length, otherwise the default width.
+		const getSafeWidth = ( value ) => {
+			const width = String( value ?? '' ).trim();
+			return /^\d+(?:\.\d+)?(?:px|%|em|rem|vw|vh)?$/i.test( width ) ? width : '900px';
+		};
+
 		$( '.wpzoom-video-popup-block[href]' ).each(function() {
 			const $this = $(this);
-			const popupWidth = $this.data('popup-width') || '900px';
+			const videoUrl = getSafeUrl( $this.attr('href') );
+
+			// Not a URL we can open in the popup: leave nothing behind that could run on click.
+			if ( null === videoUrl ) {
+				$this.removeAttr('href').removeAttr('data-mfp-src');
+				return;
+			}
+
+			const popupWidth = getSafeWidth( $this.attr('data-popup-width') );
 			const aspectRatio = $this.data('aspect-ratio') || '16:9';
-			const isMP4 = $this.attr('href').toLowerCase().endsWith('.mp4');
+			const isMP4 = videoUrl.toLowerCase().endsWith('.mp4');
 			// Detect if this is a YouTube Shorts URL
-			const isYoutubeShorts = $this.attr('href').indexOf('youtube.com/shorts/') !== -1;
+			const isYoutubeShorts = videoUrl.indexOf('youtube.com/shorts/') !== -1;
 			// Detect if this is a TikTok URL
-			const isTikTok = $this.attr('href').indexOf('tiktok.com') !== -1;
+			const isTikTok = videoUrl.indexOf('tiktok.com') !== -1;
 			// For portrait videos (TikTok & Shorts)
 			const isPortrait = isYoutubeShorts || isTikTok;
 			// For portrait videos, use 450px as width regardless of popupWidth setting
@@ -84,17 +114,23 @@ import { __ } from '@wordpress/i18n';
 						$('#wpzoom-popup-ratio-style').remove();
 					},
 					elementParse: function(item) {
+						// Always use the validated link URL, never `data-mfp-src`.
+						item.src = videoUrl;
+
 						// For MP4 videos, we need to create the video element
 						if (isMP4) {
-							const videoUrl = item.src;
 							const scalerPadding = useCustomRatio ? paddingTop : '56.25%';
-							item.type = 'inline';
-							item.src = $('<div class="mfp-iframe-scaler" style="max-width: ' + effectiveWidth + '; padding-top: ' + scalerPadding + ';">' +
+							const $scaler = $('<div class="mfp-iframe-scaler">' +
 								closeMarkup +
-								'<video class="mfp-iframe" controls autoplay playsinline style="position: absolute; display: block; top: 0; left: 0; width: 100%; height: 100%; background: #000;">' +
-									'<source src="' + videoUrl + '" type="video/mp4">' +
-								'</video>' +
+								'<video class="mfp-iframe" controls autoplay playsinline style="position: absolute; display: block; top: 0; left: 0; width: 100%; height: 100%; background: #000;"></video>' +
 							'</div>');
+
+							// The URL and sizes are set through the DOM, never concatenated into markup.
+							$scaler.css( { 'max-width': effectiveWidth, 'padding-top': scalerPadding } );
+							$( '<source>' ).attr( { src: videoUrl, type: 'video/mp4' } ).appendTo( $scaler.find( 'video' ) );
+
+							item.type = 'inline';
+							item.src = $scaler;
 						}
 					}
 				},
@@ -170,7 +206,7 @@ import { __ } from '@wordpress/i18n';
 							src: '//www.tiktok.com/embed/v2/%id%'
 						}
 					},
-					markup: '<div class="mfp-iframe-scaler" style="max-width: ' + (isPortrait ? '325px' : effectiveWidth) + ';">' +
+					markup: '<div class="mfp-iframe-scaler" style="max-width: ' + escAttr( isPortrait ? '325px' : effectiveWidth ) + ';">' +
 							closeMarkup +
 							'<iframe class="mfp-iframe"' + (isPortrait ? ' width="325" height="580"' : '') + ' frameborder="0" allowfullscreen></iframe>' +
 							'</div>'
