@@ -12,7 +12,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Requires at least: 6.4
  * Requires PHP:      7.4
- * Tested up to: 7.1
+ * Tested up to: 7.2
  *
  * @package Wpzoom_Video_Popup_Block
  */
